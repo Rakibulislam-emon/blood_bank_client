@@ -3,14 +3,31 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useState } from "react";
 import { imageUpload } from "../../../Components/Utils";
+import useAxiosCommon from "../../../Hooks/useAxiosCommon";
+import toast from "react-hot-toast";
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user ,updateUserProfile} = useAuth();
+    const axiosCommon = useAxiosCommon()
     const { email } = user || {};
-    const axiosSecure = useAxiosSecure(); 
-
+    const axiosSecure = useAxiosSecure();
+    // get divisions data
+    const { data: divisions = [], } = useQuery({
+        queryKey: 'divisions',
+        queryFn: async () => {
+            const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/divisions`);
+            return res.data;
+        },
+    });
+    const { data: upozilas = [] } = useQuery({
+        queryKey: 'upozilas',
+        queryFn: async () => {
+            const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/upozila`);
+            return res.data;
+        },
+    })
     // Fetch user profile data
-    const { data } = useQuery({
+    const { data ,refetch} = useQuery({
         queryKey: ['profile', email],
         queryFn: async () => {
             const res = await axiosSecure.get(`${import.meta.env.VITE_API_URL}/profile/${user?.email}`);
@@ -23,7 +40,7 @@ const Profile = () => {
         setToggle(prevToggle => !prevToggle);
         console.log(toggle); // This will log the previous value of toggle, not the updated one
     };
-  
+
     // handle form submission
     const handleUpdate = async (e) => {
         e.preventDefault()
@@ -32,16 +49,43 @@ const Profile = () => {
         const lastName = form.lastName.value
         const photo = form.image.files[0]
         const email = user?.email
+        const profession = form.profession.value
         const district = form.district.value
-        const upozila = form.upazila.value
+        const upozila = form.upozila.value
         const bloodGroup = form.bloodGroup.value
         const bio = form.bio.value
-        console.log(firstName, lastName,photo,email,district,upozila,bloodGroup,bio);
+        const fullName = `${firstName} ${lastName}`
+        console.log(firstName, lastName, photo, email, district, upozila, bloodGroup, bio);
         try {
             const image_Url = await imageUpload(photo);
             console.log('Image URL:', image_Url);
+            const updateInfo = {
+                firstName,
+                lastName,
+                image: image_Url,
+                email,
+                district,
+                upozila,
+                 profession,
+                bloodGroup,
+                bio,
+            }
+            if (updateInfo) {
+                const res = await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/profile-update/${email}`, updateInfo )
+                console.log(res.data);
+                if(res.data.modifiedCount > 0) {
+                    toast.success('profile updated successfully')
+                  const update= await  updateUserProfile (fullName,image_Url)
+                  console.log(update);
+                    refetch()
+                    setToggle(true)
+                }
+            } else {
+                return alert('updateFailed')
+            }
+            
         } catch (error) {
-             console.log(error.message);
+            console.log(error.message);
         }
     }
 
@@ -57,7 +101,7 @@ const Profile = () => {
                                 src={data?.image}
                                 alt="Bordered avatar"
                             />
-                             <div className="flex flex-col space-y-5 sm:ml-8">
+                            <div className="flex flex-col space-y-5 sm:ml-8">
                                 <button
                                     type="button"
                                     onClick={handleEditClick}
@@ -78,47 +122,90 @@ const Profile = () => {
                         <div className="items-center mt-8 sm:mt-14 text-[#202142]">
                             <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                                 <div className="w-full">
-                                    <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Your first name</label>
-                                    <input name="firstName" type="text" id="firstName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.name}  readOnly={toggle}/>
+                                    <input name="firstName" type="text" id="firstName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.name} readOnly={toggle} />
                                 </div>
                                 <div className="w-full">
-                                    <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Your last name</label>
-                                    <input type="text" name="lastName" id="lastName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={'...'} readOnly={toggle}/>
+                                    <input type="text" name="lastName" id="lastName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={'...'} readOnly={toggle} />
                                 </div>
                             </div>
 
                             <div className="mb-2 sm:mb-6">
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Your Image</label>
-                                <input 
-                                name="image"
-                                type="file"
-                                 accept="image/*"
-                                 className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.email} disabled={toggle} />
+                                <input
+                                    name="image"
+                                    type="file"
+                                    accept="image/*"
+                                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"  disabled={toggle} />
                             </div>
 
                             <div className="mb-2 sm:mb-6">
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Your email</label>
                                 <input type="email" id="email" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.email} readOnly />
                             </div>
 
                             <div className="mb-2 sm:mb-6">
-                                <label htmlFor="profession" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Profession</label>
-                                <input name="profession" type="text" id="profession" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.profession} readOnly={toggle} />
+                                <input name="profession" placeholder="profession" type="text" id="profession" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.profession} readOnly={toggle} />
                             </div>
 
                             <div className="mb-2 sm:mb-6">
-                                <label htmlFor="district" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">District</label>
-                                <input type="text" name="district" id="district" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.district} readOnly={toggle} />
+                                <select
+                                    disabled={toggle}
+                                    name="district"
+
+                                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                >
+                                    <option>{data?.district}</option>
+                                    {
+                                        divisions && divisions.map((division) => {
+                                            return (
+                                                <option key={division._id} value={division.name}>
+                                                    {division.name}
+                                                </option>
+                                            );
+                                        })
+                                    }
+
+
+                                </select>
                             </div>
 
                             <div className="mb-2 sm:mb-6">
                                 <label htmlFor="upazila" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Upazila</label>
-                                <input name="upozila" type="text" id="upazila" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.upazila} readOnly={toggle} />
+                                <select
+                                    disabled={toggle}
+                                    name="upozila"
+                                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                >
+                                    <option >{data?.upazila}</option>
+                                    {/* Add options for upazilas */}
+                                    {
+                                        upozilas && upozilas.map((upozila) => {
+                                            return (
+                                                <option key={upozila._id} value={upozila.name}>
+                                                    {upozila.name}
+                                                </option>
+                                            );
+                                        })
+                                    }
+                                </select>
                             </div>
 
                             <div className="mb-2 sm:mb-6">
                                 <label htmlFor="bloodGroup" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Blood Group</label>
-                                <input name="bloodGroup" type="text" id="bloodGroup" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.bloodGroup} readOnly={toggle} />
+                                <select
+                                    name="bloodGroup"
+                                  
+                                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                    disabled={toggle}
+                                >
+                                    <option value="">{data?.bloodGroup}</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
                             </div>
 
                             <div className="mb-6">
