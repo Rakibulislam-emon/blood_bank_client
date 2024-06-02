@@ -4,12 +4,14 @@ import Navitems from './Navitems';
 import Container from '../Container/Container';
 import useAuth from '../../../Hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 const Navbar = () => {
 const navigate = useNavigate()
     const { user,logOut } = useAuth()
 
     const handleLogout = () => {
         logOut()
+       toast.success('logout successful')
         navigate('/login')
     }
 
@@ -80,7 +82,7 @@ const navigate = useNavigate()
                                     <div className={`${dropdownOpen ? 'block' : 'hidden'} absolute bg-white text-base z-10 list-none divide-y divide-gray-100 rounded shadow my-4 w-44`} id="dropdownNavbar">
                                         <ul className="py-1" aria-labelledby="dropdownLargeButton">
                                             <li>
-                                                <a  className="text-sm hover:bg-gray-100 text-gray-700 block px-4 pr-4  py-2">Dashboard</a>
+                                                <Link to={'dashboard'}  className="text-sm hover:bg-gray-100 text-gray-700 block px-4 pr-4  py-2">Dashboard</Link>
                                             </li>
 
                                         </ul>

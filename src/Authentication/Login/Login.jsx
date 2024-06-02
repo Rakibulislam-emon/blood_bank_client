@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 const Login = () => {
   const navigate = useNavigate()
   const {signIn} =  useAuth()
@@ -12,15 +13,16 @@ const Login = () => {
     console.log(email, password);
     try {
         signIn(email, password)
-        toast('success')
+        toast.success('success')
       navigate('/')
     } catch (error) {
-        alert(error.message)      
+      toast.error(error.message)
         
     }
   }
     return (
       <div>
+        <Helmet title=" Login"/>
         <div className="font-[sans-serif] text-[#333]">
           <div className="min-h-screen flex flex-col items-center justify-center">
             <div className="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
