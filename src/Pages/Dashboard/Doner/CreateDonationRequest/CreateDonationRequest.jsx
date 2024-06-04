@@ -25,7 +25,7 @@ const CreateDonationRequest = () => {
     })
     console.log(upozilas);
     // form submission
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const form = e.target
         const requesterName = form.requesterName.value
@@ -40,7 +40,22 @@ const CreateDonationRequest = () => {
         const requestedTime = form.time.value
         const requestedMessage = form.message.value
         const status = 'pending'
-        console.table(requesterName,requesterEmail,recipientName,district,upazila,hospitalName,bloodGroup,fullAddress,requestedData,requestedTime,requestedMessage,status)
+        const today = new Date();
+
+        // Get the year, month, and day
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+        const day = String(today.getDate()).padStart(2, '0'); // Add leading zero if needed
+
+        // Get the hours, minutes, and seconds
+        const hours = String(today.getHours()).padStart(2, '0'); // Add leading zero if needed
+        const minutes = String(today.getMinutes()).padStart(2, '0'); // Add leading zero if needed
+        const seconds = String(today.getSeconds()).padStart(2, '0'); // Add leading zero if needed
+
+        // Format the date and time
+        const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        console.log(formattedDateTime)
+        console.table(requesterName, requesterEmail, recipientName, district, upazila, hospitalName, bloodGroup, fullAddress, requestedData, requestedTime, requestedMessage, status)
         const bloodRequestInfo = {
             requesterName,
             requesterEmail,
@@ -54,6 +69,7 @@ const CreateDonationRequest = () => {
             requestedTime,
             requestedMessage,
             status,
+            formattedDateTime
         }
         try {
             const res = await axiosCommon.post('/bloodRequests', bloodRequestInfo)
@@ -61,8 +77,8 @@ const CreateDonationRequest = () => {
             form.reset()
             toast.success('Requested successful')
         } catch (error) {
-             console.log(error);
-             toast.error('Something went wrong')
+            console.log(error);
+            toast.error('Something went wrong')
         }
 
     }
@@ -76,6 +92,7 @@ const CreateDonationRequest = () => {
                             Requester Name
                         </label>
                         <input
+                            required
                             type="text"
                             name="requesterName"
                             id="requesterName"
@@ -90,6 +107,7 @@ const CreateDonationRequest = () => {
                             Email Address
                         </label>
                         <input
+                            required
                             type="email"
                             name="email"
                             id="email"
@@ -105,6 +123,7 @@ const CreateDonationRequest = () => {
                             Recipient Name
                         </label>
                         <input
+                            required
                             type="text"
                             name="recipientName"
                             id="recipientName"
@@ -160,6 +179,7 @@ const CreateDonationRequest = () => {
                             Hospital Name
                         </label>
                         <input
+                            required
                             type="text"
                             name="hospitalName"
                             id="hospitalName"
@@ -192,6 +212,7 @@ const CreateDonationRequest = () => {
                             Full Address
                         </label>
                         <input
+                            required
                             type="text"
                             name="fullAddress"
                             id="fullAddress"
@@ -206,6 +227,7 @@ const CreateDonationRequest = () => {
                                     Date
                                 </label>
                                 <input
+                                    required
                                     type="date"
                                     name="date"
                                     id="date"
@@ -219,6 +241,7 @@ const CreateDonationRequest = () => {
                                     Time
                                 </label>
                                 <input
+                                    required
                                     type="time"
                                     name="time"
                                     id="time"

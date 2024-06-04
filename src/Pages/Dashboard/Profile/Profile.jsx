@@ -8,12 +8,13 @@ import toast from "react-hot-toast";
 
 const Profile = () => {
     const { user ,updateUserProfile} = useAuth();
+    console.log('user:', user?.email)
     const axiosCommon = useAxiosCommon()
-    const { email } = user || {};
+    // const { email } = user || {};
     const axiosSecure = useAxiosSecure();
     // get divisions data
     const { data: divisions = [], } = useQuery({
-        queryKey: 'divisions',
+        queryKey: ['divisions'],
         queryFn: async () => {
             const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/divisions`);
             return res.data;
@@ -28,9 +29,10 @@ const Profile = () => {
     })
     // Fetch user profile data
     const { data ,refetch} = useQuery({
-        queryKey: ['profile', email],
+        queryKey: ['profile', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`${import.meta.env.VITE_API_URL}/profile/${user?.email}`);
+             console.log(res.data);
             return res.data;
         },
     });
@@ -90,7 +92,7 @@ const Profile = () => {
     }
 
     return (
-        <form onSubmit={handleUpdate} className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
+        <form onSubmit={handleUpdate} className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 mx-auto">
             <div className="p-2 md:p-4">
                 <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
                     <h2 className="pl-6 text-2xl font-bold sm:text-xl">Public Profile</h2>

@@ -1,9 +1,21 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
 import { IoIosLogOut } from "react-icons/io";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import { FaHome } from "react-icons/fa";
+import toast from 'react-hot-toast';
+import useGetAllUsersRole from '../../../Hooks/useGetAllUsersRole';
+import { PiUsersFourBold  } from "react-icons/pi";
 const Sidebar = () => {
+  const navigate = useNavigate()
   const { user, logOut } = useAuth()
+  const handleLogout = () => {
+    logOut()
+    toast.success('logged out')
+    navigate('/')
+  }
+  const [role] = useGetAllUsersRole()
+  console.log('role:', role)
   console.log(user);
   return (
     <nav className="bg-[#121e31] h-screen fixed top-0 left-0 min-w-[250px] py-6 px-4 font-[sans-serif] tracking-wide overflow-auto">
@@ -18,6 +30,12 @@ const Sidebar = () => {
       <hr className="my-6 border-gray-400" />
       <ul className="space-y-3">
         {/* for all user */}
+        <li className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+          <Link to={'/'} className='flex'>
+            <FaHome className='mr-2' size={20} />
+            Home
+          </Link>
+        </li>
         <li>
           <Link to={'/dashboard/profile'} className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
@@ -29,19 +47,45 @@ const Sidebar = () => {
             <span>Profile</span>
           </Link>
         </li>
+        {/* admins links */}
+        <>
+
+          <Link to={'all-users'}
+           className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            <PiUsersFourBold  size={20} className='mr-2' />
+            All Users
+          </Link>
+          <Link to={'all-blood-donation-request'}
+           className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            <IoIosAddCircleOutline size={20} className='mr-2' />
+            All Blood Donation Request Page
+          </Link>
+          <Link to={'content-management'} 
+          className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            <IoIosAddCircleOutline size={20} className='mr-2' />
+            Content Management Page
+          </Link>
+
+        </>
+
         {/* donors links  */}
-        <Link to={'create-donation-request'} className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
-          <IoIosAddCircleOutline size={20} className='mr-2' />
-          Blood Donation Request
-        </Link>
-        <Link to={'my-donation-requests'} className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
-          <IoIosAddCircleOutline size={20} className='mr-2' />
-          My Donation Requests
-        </Link>
+        {role === 'donor' && <>
+          <Link to={'create-donation-request'} className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            <IoIosAddCircleOutline size={20} className='mr-2' />
+            Blood Donation Request
+          </Link>
+          <Link to={'my-donation-requests'} className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            <IoIosAddCircleOutline size={20} className='mr-2' />
+            My Donation Requests
+          </Link>
+        </>}
+
+
+
         {/* for all user */}
         <li className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
 
-          <button onClick={logOut} className='flex'>
+          <button onClick={handleLogout} className='flex'>
             <IoIosLogOut size={20} className='mr-2' />
             Logout
           </button>

@@ -13,7 +13,7 @@ const SignUp = () => {
     const { createUser,updateUserProfile } = useAuth();
     // get divisions data
     const { data: divisions = [] } = useQuery({
-        queryKey: 'divisions',
+        queryKey: ['divisions'],
         queryFn: async () => {
             const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/divisions`);
             return res.data;
@@ -23,7 +23,7 @@ const SignUp = () => {
 
     // get upozilas data
     const { data: upozilas = [] } = useQuery({
-        queryKey: 'upozilas',
+        queryKey: ['upozilas'],
         queryFn: async () => {
             const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/upozila`);
             return res.data;
@@ -47,7 +47,7 @@ const SignUp = () => {
         const status = 'active';
       
         if (password !== confirmPassword) {
-          console.error('Passwords do not match');
+          toast.error('Passwords do not match');
           return; // Exit if passwords don't match
         }
       
