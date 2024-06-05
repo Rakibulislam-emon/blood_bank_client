@@ -48,14 +48,14 @@ const Sidebar = () => {
           </Link>
         </li>
         {/* admins links */}
-        <>
+       { role === 'admin' && <>
 
           <Link to={'all-users'}
            className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
             <PiUsersFourBold  size={20} className='mr-2' />
             All Users
           </Link>
-          <Link to={'all-blood-donation-request'}
+          <Link to={'/dashboard/all-blood-donation-request'}
            className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
             <IoIosAddCircleOutline size={20} className='mr-2' />
             All Blood Donation Request Page
@@ -66,7 +66,7 @@ const Sidebar = () => {
             Content Management Page
           </Link>
 
-        </>
+        </>}
 
         {/* donors links  */}
         {role === 'donor' && <>

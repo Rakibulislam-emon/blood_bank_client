@@ -3,7 +3,7 @@ import Sidebar from "../Sidebar/Sidebar";
 
 const Dashboard = () => {
   return (
-    <div className=' min-h-screen md:flex '>
+    <div className=' lg:min-h-screen md:flex '>
       {/* Sidebar */}
       <Sidebar />
 

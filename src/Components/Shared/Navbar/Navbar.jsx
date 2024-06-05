@@ -62,7 +62,7 @@ const navigate = useNavigate()
 
                                 </li>
                                 <li>
-                                    <Navitems title={'Blogs'} path={'/blogs'} />
+                                    <Navitems title={'Blogs'} path={'content-management'} />
                                 </li>
                                 <li>
                                     <Navitems title={'Funding'} path={'/f'} />

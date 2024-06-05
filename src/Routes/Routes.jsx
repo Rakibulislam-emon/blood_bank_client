@@ -11,6 +11,9 @@ import MyDonationRequests from "../Pages/Dashboard/Doner/MyDonationRequests/MyDo
 import DonerRequestEdit from "../Pages/Dashboard/Doner/DonerHomePage/DonerRequestEdit/DonerRequestEdit";
 import AllUsers from "../Pages/Dashboard/Admin/AllUsers/AllUsers";
 import ContentManageMent from "../Pages/Dashboard/Admin/ContentManageMent/ContentManageMent";
+import BlogDetails from "../Pages/Dashboard/Admin/ContentManageMent/BlogDetails/BlogDetails";
+import AddBlogs from "../Pages/Dashboard/Admin/ContentManageMent/AddBlogs/AddBlogs";
+import AllBloodDonationRequest from "../Pages/Dashboard/Admin/AllBloodDonationRequest/AllBloodDonationRequest";
 
 
 
@@ -35,6 +38,7 @@ export const router = createBrowserRouter([
                 path: '',
                 element: <DashboardHome />
             },
+          
             {
                 path: 'profile',
                 element: <Profile />
@@ -61,7 +65,21 @@ export const router = createBrowserRouter([
             {
                 path:'content-management',
                 element:<ContentManageMent/>
+            },
+            // problem links
+            {
+                path: 'blogDetails/:id',
+                element:<BlogDetails/>
+            },
+            {
+                path: 'add-blog',
+                element:<AddBlogs/>
+            },
+            {
+                path:'all-blood-donation-request',
+                element:<AllBloodDonationRequest/>
             }
+          
         ]
     },
     { path: '/login', element: <Login /> },

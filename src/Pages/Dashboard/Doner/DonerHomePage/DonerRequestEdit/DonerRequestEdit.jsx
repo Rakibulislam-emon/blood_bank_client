@@ -4,6 +4,7 @@ import useAuth from "../../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { useLoaderData } from "react-router-dom";
+import './DonerRequestEdit'
 const DonerRequestEdit = () => {
     const userInfo = useLoaderData()
 
@@ -72,11 +73,13 @@ const DonerRequestEdit = () => {
     }
     return (
         
-            <div className="flex items-center justify-center p-12">
+            <div className=" flex items-center justify-center p-12">
                 <div className="mx-auto w-full max-w-[550px] bg-white">
                     {<form onSubmit={handleSubmit}>
                         <div className="mb-5">
+                          
                             <label htmlFor="requesterName" className="mb-3 block text-base font-medium text-[#07074D]">
+                                
                                 Requester Name
                             </label>
                             <input

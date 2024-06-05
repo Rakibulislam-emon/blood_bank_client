@@ -54,11 +54,59 @@ const MyDonationRequests = () => {
             }
         });
     };
+    const handleStatusUpdate = async (id, status) => {
+        console.log(id, status)
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: `Yes, ${status} `
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/updateStatus/${id}`, {
+                    status: status
+                })
+                    .then((response) => {
+                        console.log(response.data);
+                        Swal.fire({
+                            title: `${status}`,
+                            text: `Your request  has ${status}.`,
+                            icon: "success"
+                        });
+                        refetch();
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        Swal.fire({
+                            title: "Error!",
+                            text: `There was an error to ${status}.`,
+                            icon: "error"
+                        });
+                    });
+            }
+        });
+
+
+
+
+        //   const result = await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/updateStatus/${id}`, {
+        //     status: status
+        // })
+        // if (result.data.modifiedCount > 0) {
+        //     toast.success('confirmed')
+        // }
+        // console.log(result.data);
+
+    }
+
     if (isLoading) {
         return <span className="loading flex left-0 loading-spinner loading-lg"></span>;
     }
     if (data.length === 0) {
-         return  <span className="loading"/>
+        return <span className="loading" />
     }
     console.log(data);
     return (
@@ -85,35 +133,53 @@ const MyDonationRequests = () => {
                                 {data.map((item, index) => (
                                     <tr key={item._id} className="border-b border-neutral-200">
                                         <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
-                                        <td className="whitespace-nowrap px-6 py-4">{item.recipientName}</td>
-                                        <td className="whitespace-nowrap px-6 py-4">{item.district} <br /> {item.upazila}</td>
-                                        <td className="whitespace-nowrap px-6 py-4">{item.requestedData}</td>
-                                        <td className="whitespace-nowrap px-6 py-4">{item.requestedData} <br /> {item.requestedTime}</td>
-                                        <td className="whitespace-nowrap px-6 py-4">{item.status}</td>
-                                        <td className="whitespace-nowrap px-6 py-4">{item.requesterName} <br /> {item.requesterEmail}</td>
-                                     {/* condition used by status */}
-                                        { status === 'inProgress' ? <> 
-                                        <td><button>done</button></td>
-                                        <td><button>cancel</button></td>
-                                        </> :  <>
-                                       <td className="whitespace-nowrap px-6 py-4">
-                                            <button>viewDetails
-                                                <CiViewList className="text-center w-full" size={20} />
-                                            </button>
-                                        </td>
-                                        <td className="whitespace-nowrap px-6 py-4">
-                                            <Link to={`/dashboard/edit/${item._id}`}>
-                                                <button className="Btn">Edit
-                                                    <TbEdit size={20} />
+                                        <td className="whitespace-nowrap px-6 py-4">{item?.recipientName}</td>
+                                        <td className="whitespace-nowrap px-6 py-4">{item?.district} <br /> {item?.upazila}</td>
+                                        <td className="whitespace-nowrap px-6 py-4">{item?.requestedData}</td>
+                                        <td className="whitespace-nowrap px-6 py-4">{item?.requestedData} <br /> {item?.requestedTime}</td>
+                                        <td className="whitespace-nowrap px-6 py-4">{item?.status}</td>
+                                        <td className="whitespace-nowrap px-6 py-4">{item?.requesterName} <br /> {item?.requesterEmail}</td>
+                                        {/* condition used by status */}
+                                        {item?.status !== 'pending' ? <>
+                                            <td>
+                                                <button
+
+                                                    onClick={() => handleStatusUpdate(item?._id, 'done')} className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  "
+                                                    disabled={item?.status !== 'inProgress'}
+
+                                                >done
                                                 </button>
-                                            </Link>
-                                        </td>
-                                        <td className="whitespace-nowrap px-6 py-4">
-                                            <button onClick={() => handleDelete(item._id)} className="Btn">Delete
-                                                <MdDelete size={20} />
-                                            </button>
-                                        </td>
-                                       </>}
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleStatusUpdate(item?._id, 'canceled')}
+                                                    className="py-3 px-6 text-white rounded-lg bg-[#2a2a4c] shadow-lg block md:inline-block  "
+                                                    disabled={item?.status !== 'inProgress'}
+
+                                                >cancel
+                                                </button>
+                                            </td>
+                                        </> : <>
+                                            <td className="whitespace-nowrap px-6 py-4">
+                                                <button
+
+                                                    className=' p-3  text-white rounded-lg bg-violet-500 shadow-lg block md:inline-block  '>viewDetails
+                                                    <CiViewList className="text-center w-full" size={20} />
+                                                </button>
+                                            </td>
+                                            <td className="whitespace-nowrap px-6 py-4">
+                                                <Link to={`/dashboard/edit/${item?._id}`}>
+                                                    <button className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">Edit
+                                                        <TbEdit size={20} />
+                                                    </button>
+                                                </Link>
+                                            </td>
+                                            <td className="whitespace-nowrap px-6 py-4">
+                                                <button onClick={() => handleDelete(item?._id)} className="py-3 px-6 text-white rounded-lg bg-red-500 shadow-lg block md:inline-block  ">Delete
+                                                    <MdDelete className="ml-2" size={20} />
+                                                </button>
+                                            </td>
+                                        </>}
                                     </tr>
                                 ))}
                             </tbody>

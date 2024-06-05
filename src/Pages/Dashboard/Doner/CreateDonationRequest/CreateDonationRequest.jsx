@@ -2,8 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosCommon from "../../../../Hooks/useAxiosCommon";
 import useAuth from "../../../../Hooks/useAuth";
 import toast from "react-hot-toast";
+import useUserStatus from "../../../../Hooks/useUserStatus";
 
 const CreateDonationRequest = () => {
+   const [status ] = useUserStatus()
+  const blockedUserCheck = status;
+  console.log(blockedUserCheck);
     const { user } = useAuth()
     const axiosCommon = useAxiosCommon()
     // get divisions data
@@ -72,7 +76,10 @@ const CreateDonationRequest = () => {
             formattedDateTime
         }
         try {
-            const res = await axiosCommon.post('/bloodRequests', bloodRequestInfo)
+            if(blockedUserCheck === 'blocked'){
+                return toast.error('you have been blocked')
+            }
+            const res = await axiosCommon.post(`/bloodRequests/${user?.email}`, bloodRequestInfo)
             console.log(res.data);
             form.reset()
             toast.success('Requested successful')
@@ -84,10 +91,11 @@ const CreateDonationRequest = () => {
     }
 
     return (
-        <div className="flex items-center justify-center p-12">
-            <div className="mx-auto w-full max-w-[550px] bg-white">
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-5">
+        <div className="flex mr-8 items-center justify-center  " >
+            <div className="mx-auto w-full rounded-2xl " style={{ background: 'linear-gradient(to right, #667eea, #764ba2)' }}>
+            <h1 className="text-2xl font-bold text-center text-[#07074D] mb-8">Blood Donation Request Form</h1> {/* Add your title here */}
+                <form className="p-10" onSubmit={handleSubmit}>
+                    <div className="mb-5 ">
                         <label htmlFor="requesterName" className="mb-3 block text-base font-medium text-[#07074D]">
                             Requester Name
                         </label>
