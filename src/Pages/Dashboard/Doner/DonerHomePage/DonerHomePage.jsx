@@ -4,7 +4,7 @@ import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { TbEdit } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
-import { CiViewList } from "react-icons/ci";
+// import { CiViewList } from "react-icons/ci";
 import Swal from 'sweetalert2';
 import useRole from "../../../../Hooks/useRole";
 
@@ -113,13 +113,13 @@ const DonerHomePage = () => {
     }
 
     return (
-        <div className="flex flex-col overflow-x-auto">
+        <div className="flex  flex-col overflow-x-auto">
             {data?.length}
             <div className="sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="overflow-x-auto">
                         <table className="min-w-full  font-bold text-start text-sm  text-surface">
-                            <thead className="border-b border-neutral-200 font-medium">
+                            <thead className="border-b text-center bg-black text-white border-neutral-200 font-medium">
                                 <tr>
                                     <th scope="col" className="px-6 py-4">#</th>
                                     <th scope="col" className="px-6 py-4">Recipient name</th>
@@ -129,8 +129,11 @@ const DonerHomePage = () => {
                                     <th scope="col" className="px-6 py-4">Donation status</th>
                                     <th scope="col" className="px-6 py-4">Donor information</th>
                                     <th scope="col" className="px-6 py-4"></th>
-                                    <th scope="col" className="px-6 py-4">Action</th>
+                                    <th scope="col" className="px-6 py-4 ">action</th>
                                     <th scope="col" className="px-6 py-4"></th>
+                                    <th scope="col" className="px-6 py-4"></th>
+                                    
+                                   
                                 </tr>
                             </thead>
                             <tbody className="text-center">
@@ -143,6 +146,9 @@ const DonerHomePage = () => {
                                         <td className="whitespace-nowrap px-6 py-4">{item?.requestedData} <br /> {item?.requestedTime}</td>
                                         <td className="whitespace-nowrap px-6 py-4">{item?.status}</td>
                                         <td className="whitespace-nowrap px-6 py-4">{item?.requesterName} <br /> {item?.requesterEmail}</td>
+                                        
+                                        
+                                        
                                         {/* condition used by status */}
                                         {item?.status !== 'pending' ? <>
                                             <td>
@@ -164,13 +170,13 @@ const DonerHomePage = () => {
                                                 </button>
                                             </td>
                                         </> : <>
-                                            <td className="whitespace-nowrap px-6 py-4">
+                                            {/* <td className="whitespace-nowrap px-6 py-4">
                                                 <button
 
                                                     className=' p-3  text-white rounded-lg bg-violet-500 shadow-lg block md:inline-block  '>viewDetails
                                                     <CiViewList className="text-center w-full" size={20} />
                                                 </button>
-                                            </td>
+                                            </td> */}
                                             <td className="whitespace-nowrap px-6 py-4">
                                                 <Link to={`/dashboard/edit/${item?._id}`}>
                                                     <button className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">Edit

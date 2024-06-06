@@ -4,7 +4,7 @@ import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { TbEdit } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
-import { CiViewList } from "react-icons/ci";
+// import { CiViewList } from "react-icons/ci";
 import Swal from 'sweetalert2';
 import useRole from "../../../../Hooks/useRole";
 
@@ -124,9 +124,9 @@ const MyDonationRequests = () => {
                                     <th scope="col" className="px-6 py-4">Donation time</th>
                                     <th scope="col" className="px-6 py-4">Donation status</th>
                                     <th scope="col" className="px-6 py-4">Donor information</th>
-                                    <th scope="col" className="px-6 py-4"></th>
                                     <th scope="col" className="px-6 py-4">Action</th>
                                     <th scope="col" className="px-6 py-4"></th>
+                                  
                                 </tr>
                             </thead>
                             <tbody className="text-center">
@@ -160,13 +160,7 @@ const MyDonationRequests = () => {
                                                 </button>
                                             </td>
                                         </> : <>
-                                            <td className="whitespace-nowrap px-6 py-4">
-                                                <button
-
-                                                    className=' p-3  text-white rounded-lg bg-violet-500 shadow-lg block md:inline-block  '>viewDetails
-                                                    <CiViewList className="text-center w-full" size={20} />
-                                                </button>
-                                            </td>
+                                            
                                             <td className="whitespace-nowrap px-6 py-4">
                                                 <Link to={`/dashboard/edit/${item?._id}`}>
                                                     <button className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">Edit

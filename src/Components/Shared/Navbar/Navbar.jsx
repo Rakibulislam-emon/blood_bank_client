@@ -13,8 +13,8 @@ const navigate = useNavigate()
         logOut()
        toast.success('logout successful')
         navigate('/login')
+        
     }
-
     // menu 
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -62,10 +62,10 @@ const navigate = useNavigate()
 
                                 </li>
                                 <li>
-                                    <Navitems title={'Blogs'} path={'content-management'} />
+                                    <Navitems title={'Blogs'} path={'/all-blogs'} />
                                 </li>
                                 <li>
-                                    <Navitems title={'Funding'} path={'/f'} />
+                                    <Navitems title={'Funding'} path={'founding'} />
                                 </li>
                                { user ? <li className="relative  mt-4">
                                     <button

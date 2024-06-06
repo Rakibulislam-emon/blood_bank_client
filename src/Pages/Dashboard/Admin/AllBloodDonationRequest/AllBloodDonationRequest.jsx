@@ -8,13 +8,14 @@ import Swal from 'sweetalert2';
 // import useRole from "../../../../Hooks/useRole";
 // import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
+import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 
 
 const AllBloodDonationRequest = () => {
-    // const [status] = useRole();
-    // console.log('status:', status);
-
+    const [role] = useGetAllUsersRole()
+    console.log('role:', role)
     // const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const { data: data = [], refetch, isLoading } = useQuery({
@@ -26,6 +27,9 @@ const AllBloodDonationRequest = () => {
     });
     console.log(data);
     const handleDelete = (id) => {
+        if (role === 'volunteer'){
+            return toast.error('only admin have the access to the do this action')
+        }
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -57,10 +61,17 @@ const AllBloodDonationRequest = () => {
             }
         });
     };
+    // check user role for redirect to edit page 
+    const handleCheck = () =>{
+        if (role === 'volunteer'){
+            return toast.error('only admin have the access to the do this action')
+        }
+    }
 
     // update status of bloodRequests collection
 
     const handleStatusUpdate = async (id, status) => {
+        
         console.log(id, status)
         Swal.fire({
             title: "Are you sure?",
@@ -149,6 +160,9 @@ const AllBloodDonationRequest = () => {
                                         <td className="whitespace-nowrap px-6 py-4">{item.requesterName} <br /> {item.requesterEmail}</td>
                                         {/* condition used by status */}
                                         {item.status === 'inProgress' ? <>
+                                        <td>
+
+                                        </td>
                                             <td>
                                                 <button 
                                                     onClick={()=>handleStatusUpdate(item._id , 'done')} className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">done
@@ -162,14 +176,16 @@ const AllBloodDonationRequest = () => {
                                             </td>
                                         </> : <>
                                             <td className="whitespace-nowrap px-6 py-4">
-                                                <button
+                                                {/* <button
                                            
                                                 className=' p-3  text-white rounded-lg bg-violet-500 shadow-lg block md:inline-block  '>viewDetails
                                                     <CiViewList className="text-center w-full" size={20} />
-                                                </button>
+                                                </button> */}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">
-                                                <Link to={`/dashboard/edit/${item._id}`}>
+                                                <Link
+                                                onClick={handleCheck}
+                                                to={role !== 'volunteer' ? `/dashboard/edit/${item._id}` : undefined}>
                                                     <button className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">Edit
                                                         <TbEdit size={20} />
                                                     </button>

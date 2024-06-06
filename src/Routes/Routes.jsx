@@ -14,6 +14,9 @@ import ContentManageMent from "../Pages/Dashboard/Admin/ContentManageMent/Conten
 import BlogDetails from "../Pages/Dashboard/Admin/ContentManageMent/BlogDetails/BlogDetails";
 import AddBlogs from "../Pages/Dashboard/Admin/ContentManageMent/AddBlogs/AddBlogs";
 import AllBloodDonationRequest from "../Pages/Dashboard/Admin/AllBloodDonationRequest/AllBloodDonationRequest";
+import DonationRequests from "../Pages/DonationRequests/DonationRequests";
+import DonationRequestsDetails from "../Pages/DonationRequests/DonationRequestsDetails";
+import AllBlogs from "../Pages/AllBlogs/AllBlogs";
 
 
 
@@ -25,8 +28,26 @@ export const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />
-
-            }
+            },
+            {
+                path: 'donation-requests',
+                element:<DonationRequests/>
+            },
+            {
+                path:'donation-requests-detail/:id',
+                element: <DonationRequestsDetails/>,
+                loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/usersBloodRequests/${params.id}`)
+            },
+            {
+                path:'/all-blogs',
+                element: <AllBlogs/>,
+            },
+            {
+                path: '/blogDetails/:id',
+                element:<BlogDetails/>,
+                loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/getBlogs/${params.id}`)
+                
+            },
         ]
     },
     // dashboard
@@ -67,10 +88,7 @@ export const router = createBrowserRouter([
                 element:<ContentManageMent/>
             },
             // problem links
-            {
-                path: 'blogDetails/:id',
-                element:<BlogDetails/>
-            },
+           
             {
                 path: 'add-blog',
                 element:<AddBlogs/>

@@ -14,7 +14,7 @@ const DashboardHome = () => {
             {role === 'donor' && <DonerHomePage />}
 
             {/* admins HomePage */}
-            {role === 'admin' && <AdminHomePage />}
+            {role === 'admin' || role === 'volunteer' && <AdminHomePage />}
 
         </div>
     );

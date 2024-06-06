@@ -7,7 +7,7 @@ import useAxiosCommon from "../../../Hooks/useAxiosCommon";
 import toast from "react-hot-toast";
 
 const Profile = () => {
-    const { user ,updateUserProfile} = useAuth();
+    const { user, updateUserProfile } = useAuth();
     console.log('user:', user?.email)
     const axiosCommon = useAxiosCommon()
     // const { email } = user || {};
@@ -28,11 +28,11 @@ const Profile = () => {
         },
     })
     // Fetch user profile data
-    const { data ,refetch} = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ['profile', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`${import.meta.env.VITE_API_URL}/profile/${user?.email}`);
-             console.log(res.data);
+            console.log(res.data);
             return res.data;
         },
     });
@@ -68,34 +68,35 @@ const Profile = () => {
                 email,
                 district,
                 upozila,
-                 profession,
+                profession,
                 bloodGroup,
                 bio,
             }
             if (updateInfo) {
-                const res = await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/profile-update/${email}`, updateInfo )
+                const res = await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/profile-update/${email}`, updateInfo)
                 console.log(res.data);
-                if(res.data.modifiedCount > 0) {
+                if (res.data.modifiedCount > 0) {
                     toast.success('profile updated successfully')
-                  const update= await  updateUserProfile (fullName,image_Url)
-                  console.log(update);
+                    const update = await updateUserProfile(fullName, image_Url)
+                    console.log(update);
                     refetch()
                     setToggle(true)
                 }
             } else {
                 return alert('updateFailed')
             }
-            
+
         } catch (error) {
             console.log(error.message);
         }
     }
 
     return (
-        <form onSubmit={handleUpdate} className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 mx-auto">
+     <div className="border">
+           <form onSubmit={handleUpdate} className="w-full min-h-screen py-1 mx-auto bg-gray-50">
             <div className="p-2 md:p-4">
-                <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
-                    <h2 className="pl-6 text-2xl font-bold sm:text-xl">Public Profile</h2>
+                <div className="w-full border-red-600 border-4 px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg mx-auto bg-white shadow-md">
+                    <h2 className="pl-6 text-2xl font-bold sm:text-xl text-indigo-900">Public Profile</h2>
                     <div className="grid max-w-2xl mx-auto mt-8">
                         <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                             <img
@@ -113,7 +114,6 @@ const Profile = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    // onClick={handleSaveClick}
                                     className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200"
                                 >
                                     Save
@@ -124,34 +124,40 @@ const Profile = () => {
                         <div className="items-center mt-8 sm:mt-14 text-[#202142]">
                             <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                                 <div className="w-full">
+                                    <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">First Name</label>
                                     <input name="firstName" type="text" id="firstName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.name} readOnly={toggle} />
                                 </div>
                                 <div className="w-full">
+                                    <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Last Name</label>
                                     <input type="text" name="lastName" id="lastName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={'...'} readOnly={toggle} />
                                 </div>
                             </div>
 
                             <div className="mb-2 sm:mb-6">
+                                <label htmlFor="image" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Profile Image</label>
                                 <input
                                     name="image"
                                     type="file"
                                     accept="image/*"
-                                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"  disabled={toggle} />
+                                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" disabled={toggle} />
                             </div>
 
                             <div className="mb-2 sm:mb-6">
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Email</label>
                                 <input type="email" id="email" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.email} readOnly />
                             </div>
 
                             <div className="mb-2 sm:mb-6">
-                                <input name="profession" placeholder="profession" type="text" id="profession" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.profession} readOnly={toggle} />
+                                <label htmlFor="profession" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Profession</label>
+                                <input name="profession" placeholder="Profession" type="text" id="profession" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.profession} readOnly={toggle} />
                             </div>
 
                             <div className="mb-2 sm:mb-6">
+                                <label htmlFor="district" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">District</label>
                                 <select
                                     disabled={toggle}
                                     name="district"
-
+                                    id="district"
                                     className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                 >
                                     <option>{data?.district}</option>
@@ -164,8 +170,6 @@ const Profile = () => {
                                             );
                                         })
                                     }
-
-
                                 </select>
                             </div>
 
@@ -173,11 +177,11 @@ const Profile = () => {
                                 <label htmlFor="upazila" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Upazila</label>
                                 <select
                                     disabled={toggle}
-                                    name="upozila"
+                                    name="upazila"
+                                    id="upazila"
                                     className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                 >
                                     <option >{data?.upazila}</option>
-                                    {/* Add options for upazilas */}
                                     {
                                         upozilas && upozilas.map((upozila) => {
                                             return (
@@ -194,7 +198,7 @@ const Profile = () => {
                                 <label htmlFor="bloodGroup" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">Blood Group</label>
                                 <select
                                     name="bloodGroup"
-                                  
+                                    id="bloodGroup"
                                     className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                     disabled={toggle}
                                 >
@@ -219,6 +223,8 @@ const Profile = () => {
                 </div>
             </div>
         </form>
+     </div>
+
     );
 };
 

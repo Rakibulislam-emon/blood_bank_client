@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { IoMdAdd } from "react-icons/io";
 import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import { RiDeleteBin5Line } from "react-icons/ri";
+import useGetAllUsersRole from "../../../../../Hooks/useGetAllUsersRole";
 const BlogCard = () => {
+    const [role] = useGetAllUsersRole()
+    console.log('role:', role)
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -20,6 +22,9 @@ const BlogCard = () => {
 
     // Update blog status
     const updateBlogStatus = async (id, status) => {
+        if (role === 'volunteer'){
+            return toast.error('only admin have the access to the do this action')
+        }
         console.log(id, status);
         const res = await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/publish-blogs/${id}`, { status });
         console.log(res.data);
@@ -33,6 +38,9 @@ const BlogCard = () => {
 
     // Delete blog
     const deleteBlog = async (id) => {
+        if (role === 'volunteer'){
+            return toast.error('only admin have the access to the do this action')
+        }
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -108,10 +116,10 @@ const BlogCard = () => {
                                     <p className="text-sm font-medium text-indigo-600">
                                         <a href="#" className="hover:underline">Article</a>
                                     </p>
-                                    <Link to={`blogDetails/${blog._id}`} className="mt-2 block">
+                                    <Link  className="mt-2 block">
                                         <p className="text-xl font-semibold text-gray-900">{blog.title}</p>
                                         <p className="mt-3 text-base text-gray-500">
-                                            {blog.content.split(' ').slice(0, 20).join(' ')}
+                                            {blog?.content?.split(' ').slice(0, 20).join(' ')}
                                         </p>
                                     </Link>
                                 </div>

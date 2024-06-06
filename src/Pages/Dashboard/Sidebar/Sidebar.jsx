@@ -5,7 +5,8 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaHome } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import useGetAllUsersRole from '../../../Hooks/useGetAllUsersRole';
-import { PiUsersFourBold  } from "react-icons/pi";
+import { PiUsersFourBold } from "react-icons/pi";
+import { MdManageAccounts } from "react-icons/md";
 const Sidebar = () => {
   const navigate = useNavigate()
   const { user, logOut } = useAuth()
@@ -48,21 +49,36 @@ const Sidebar = () => {
           </Link>
         </li>
         {/* admins links */}
-       { role === 'admin' && <>
-
-          <Link to={'all-users'}
-           className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
-            <PiUsersFourBold  size={20} className='mr-2' />
-            All Users
-          </Link>
+        {role === 'admin' &&
+          <>
+            <Link
+              to={'all-users'}
+              className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+              <PiUsersFourBold size={20} className='mr-2' />
+              All Users
+            </Link>
+            <Link to={'/dashboard/all-blood-donation-request'}
+              className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+              <IoIosAddCircleOutline size={20} className='mr-2' />
+              All Blood Donation Request Page
+            </Link>
+            <Link to={'content-management'}
+              className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+              <MdManageAccounts size={20} className='mr-2' />
+              Content Management Page
+            </Link>
+          </>
+          // volunteer links
+        }
+        {role === 'volunteer' && <>
           <Link to={'/dashboard/all-blood-donation-request'}
-           className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
             <IoIosAddCircleOutline size={20} className='mr-2' />
             All Blood Donation Request Page
           </Link>
-          <Link to={'content-management'} 
-          className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
-            <IoIosAddCircleOutline size={20} className='mr-2' />
+          <Link to={'content-management'}
+            className="text-white text-sm flex items-center hover:bg-gray-700 rounded px-4 py-3 transition-all">
+            <MdManageAccounts size={20} className='mr-2' />
             Content Management Page
           </Link>
 
