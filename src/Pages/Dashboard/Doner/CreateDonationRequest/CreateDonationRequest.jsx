@@ -3,8 +3,10 @@ import useAxiosCommon from "../../../../Hooks/useAxiosCommon";
 import useAuth from "../../../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import useUserStatus from "../../../../Hooks/useUserStatus";
+import { useEffect, useState } from "react";
 
 const CreateDonationRequest = () => {
+    const [sortedUpazila ,setSortedUpazila] =useState()
    const [status ] = useUserStatus()
   const blockedUserCheck = status;
   console.log(blockedUserCheck);
@@ -18,7 +20,6 @@ const CreateDonationRequest = () => {
             return res.data;
         },
     });
-    console.log(divisions);
     // get upozilas data
     const { data: upozilas = [] } = useQuery({
         queryKey: 'upozilas',
@@ -27,7 +28,11 @@ const CreateDonationRequest = () => {
             return res.data;
         },
     })
-    console.log(upozilas);
+    // sorted upozilas
+    useEffect(() => {
+        const sorted = [...upozilas].sort((a, b) =>a.name.localeCompare(b.name))
+         setSortedUpazila(sorted)
+    })
     // form submission
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -172,7 +177,7 @@ const CreateDonationRequest = () => {
                         >
                             {/* Add upazila options here */}
                             {
-                                upozilas && upozilas.map((upozila) => {
+                                sortedUpazila && sortedUpazila.map((upozila) => {
                                     return (
                                         <option key={upozila._id} value={upozila.name}>
                                             {upozila.name}

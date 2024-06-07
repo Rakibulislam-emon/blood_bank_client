@@ -16,8 +16,8 @@ const Login = () => {
       console.log(res);
       toast.success('logged in successfully')
       navigate('/')
-    } catch (error) {
-      toast.error(error.message)
+    } catch (err) {
+      toast.error('failed to login with error: ' + err)
 
     }
   }

@@ -6,13 +6,15 @@ import { IoMdAdd } from "react-icons/io";
 import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import useGetAllUsersRole from "../../../../../Hooks/useGetAllUsersRole";
+import { useState } from "react";
 const BlogCard = () => {
+    const [filter, setFilter] = useState('')
     const [role] = useGetAllUsersRole()
     console.log('role:', role)
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data, refetch } = useQuery({
+    const { data =[], refetch } = useQuery({
         queryKey: ['blogs'],
         queryFn: async () => {
             const res = await axiosSecure.get(`${import.meta.env.VITE_API_URL}/blogs`);
@@ -22,7 +24,7 @@ const BlogCard = () => {
 
     // Update blog status
     const updateBlogStatus = async (id, status) => {
-        if (role === 'volunteer'){
+        if (role === 'volunteer') {
             return toast.error('only admin have the access to the do this action')
         }
         console.log(id, status);
@@ -38,7 +40,7 @@ const BlogCard = () => {
 
     // Delete blog
     const deleteBlog = async (id) => {
-        if (role === 'volunteer'){
+        if (role === 'volunteer') {
             return toast.error('only admin have the access to the do this action')
         }
         Swal.fire({
@@ -49,7 +51,7 @@ const BlogCard = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then ( async (result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 await axiosSecure.delete(`${import.meta.env.VITE_API_URL}/delete-blogs/${id}`)
                     .then((response) => {
@@ -73,6 +75,26 @@ const BlogCard = () => {
         });
     }
 
+    // filter handler
+    const handleFilterChange = (e) => {
+        setFilter(e.target.value)
+    }
+
+
+    // filtered data
+    const filteredData = data.filter((blog) => {
+        if (filter === '') {
+            return blog
+        }
+        else if (filter === 'published') {
+            return blog.status === 'published'
+        } else if (filter === 'draft') {
+            return blog.status === 'draft'
+        } 
+    })
+    console.log(filteredData);
+
+
     return (
         <div className="relative bg-gray-50 px-6 pt-16 pb-20 lg:px-8 lg:pt-24 lg:pb-28">
             <div className="absolute inset-0">
@@ -83,10 +105,12 @@ const BlogCard = () => {
                 <div className="right-0 absolute flex font-bold text-2xl">
                     <div>
                         <span>Sort by</span>
-                        <select name="" className="border-red-500 p-4 border-4 mx-4">
+                        <select
+                            onChange={handleFilterChange}
+                            name="" className="border-red-500 p-4 border-4 mx-4">
                             <option value="">All</option>
-                            <option value="">Published</option>
-                            <option value="">Drafts</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Drafts</option>
                         </select>
                     </div>
 
@@ -102,7 +126,7 @@ const BlogCard = () => {
                     </p>
                 </div>
                 <div className="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
-                    {data && data.map(blog => (
+                    {filteredData && filteredData.map(blog => (
                         <div key={blog._id} className="flex flex-col overflow-hidden rounded-lg shadow-lg">
                             <div className="flex-shrink-0">
                                 <img
@@ -116,7 +140,7 @@ const BlogCard = () => {
                                     <p className="text-sm font-medium text-indigo-600">
                                         <a href="#" className="hover:underline">Article</a>
                                     </p>
-                                    <Link  className="mt-2 block">
+                                    <Link className="mt-2 block">
                                         <p className="text-xl font-semibold text-gray-900">{blog.title}</p>
                                         <p className="mt-3 text-base text-gray-500">
                                             {blog?.content?.split(' ').slice(0, 20).join(' ')}
@@ -145,7 +169,7 @@ const BlogCard = () => {
                                     </div>
                                     {/* Publish/Unpublish buttons */}
                                     <div className="pt-8">
-                                       <button onClick={()=>deleteBlog(blog._id)} className="text-white py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent  hover:bg-[#ff0f17] hover:text[#ff0f17] disabled:opacity-50 disabled:pointer-events-none dark:text-[#ff0f17] dark:hover:bg-red-800-800/30 dark:hover:text-white">Delete</button>
+                                        <button onClick={() => deleteBlog(blog._id)} className="text-white py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent  hover:bg-[#ff0f17] hover:text[#ff0f17] disabled:opacity-50 disabled:pointer-events-none dark:text-[#ff0f17] dark:hover:bg-red-800-800/30 dark:hover:text-white">Delete</button>
                                         {blog?.status === 'draft' ? (
                                             <button
                                                 onClick={() => updateBlogStatus(blog._id, 'published')}

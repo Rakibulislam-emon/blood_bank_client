@@ -17,6 +17,7 @@ import AllBloodDonationRequest from "../Pages/Dashboard/Admin/AllBloodDonationRe
 import DonationRequests from "../Pages/DonationRequests/DonationRequests";
 import DonationRequestsDetails from "../Pages/DonationRequests/DonationRequestsDetails";
 import AllBlogs from "../Pages/AllBlogs/AllBlogs";
+import SearchDonor from "../Pages/Home/SearchDonor/SearchDonor";
 
 
 
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />
+            },
+            {
+                path:'/search-donor',
+                element:<SearchDonor/>
             },
             {
                 path: 'donation-requests',
@@ -46,7 +51,6 @@ export const router = createBrowserRouter([
                 path: '/blogDetails/:id',
                 element:<BlogDetails/>,
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/getBlogs/${params.id}`)
-                
             },
         ]
     },

@@ -18,7 +18,7 @@ const Banner = () => {
                         <Link to={'/register'} className="btn bg-white">
                             JOIN AS A DONOR
                         </Link>
-                        <Link  className="btn   bg-white">
+                        <Link to={'/search-donor'}  className="btn   bg-white">
                             search donor
                         </Link>
                     </div>

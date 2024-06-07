@@ -3,8 +3,10 @@ import { useRef, useState } from 'react';
 import { imageUpload } from '../../../../../Components/Utils';
 import toast from 'react-hot-toast';
 import useAxiosSecure from '../../../../../Hooks/useAxiosSecure';
+import useAuth from '../../../../../Hooks/useAuth';
 
 const AddBlogs = () => {
+    const {user} = useAuth()
     const editor = useRef(null);
     const [content, setContent] = useState('');
     const axiosSecure = useAxiosSecure()
@@ -30,7 +32,10 @@ const AddBlogs = () => {
                 title,
                 image: image_url,
                 blog,
-                createdDate
+                createdDate,
+                creatorName: user?.displayName,
+                creatorImage : user?.photoURL,
+                status: 'draft'
             };
             const res = await axiosSecure.post('blogs',blogInfo)
             console.log(res.data);

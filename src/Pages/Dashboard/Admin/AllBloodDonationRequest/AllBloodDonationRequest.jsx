@@ -3,17 +3,19 @@ import { Link } from "react-router-dom";
 
 import { TbEdit } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
-import { CiViewList } from "react-icons/ci";
+// import { CiViewList } from "react-icons/ci";
 import Swal from 'sweetalert2';
 // import useRole from "../../../../Hooks/useRole";
 // import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
 import toast from "react-hot-toast";
+import { useState } from "react";
 // import toast from "react-hot-toast";
 
 
 const AllBloodDonationRequest = () => {
+    const [filter,setFilter ] = useState()
     const [role] = useGetAllUsersRole()
     console.log('role:', role)
     // const { user } = useAuth();
@@ -25,9 +27,9 @@ const AllBloodDonationRequest = () => {
             return res.data
         },
     });
-    console.log(data);
+    console.log(data.length);
     const handleDelete = (id) => {
-        if (role === 'volunteer'){
+        if (role === 'volunteer') {
             return toast.error('only admin have the access to the do this action')
         }
         Swal.fire({
@@ -62,8 +64,8 @@ const AllBloodDonationRequest = () => {
         });
     };
     // check user role for redirect to edit page 
-    const handleCheck = () =>{
-        if (role === 'volunteer'){
+    const handleCheck = () => {
+        if (role === 'volunteer') {
             return toast.error('only admin have the access to the do this action')
         }
     }
@@ -71,7 +73,7 @@ const AllBloodDonationRequest = () => {
     // update status of bloodRequests collection
 
     const handleStatusUpdate = async (id, status) => {
-        
+
         console.log(id, status)
         Swal.fire({
             title: "Are you sure?",
@@ -81,7 +83,7 @@ const AllBloodDonationRequest = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/updateStatus/${id}`, {
                     status: status
@@ -127,9 +129,40 @@ const AllBloodDonationRequest = () => {
     if (data.length === 0) {
         return <span className="loading" />
     }
-    console.log(data);
+    const handleFilterChange = (e) => {
+        setFilter(e.target.value);
+    };
+    const filteredData = data.filter((item) => {
+        if (filter === 'pending') {
+            return item.status === 'pending';
+        } else if (filter === 'inProgress'){
+             return item.status === 'inProgress';
+        }  else if (filter === 'canceled'){
+             return item.status === 'canceled';
+        } else if (filter === 'done'){
+            return item.status === 'done'
+        } else{
+            return item
+        }
+    })
+    console.log(filteredData);
+ 
     return (
         <div className="flex flex-col overflow-x-auto">
+           <div className="flex justify-end">
+           <div >
+                <span>Sort by</span>
+                <select
+                    onChange={handleFilterChange}
+                    name="" className="border-red-500 p-4 border-4 mx-4">
+                    <option value="">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="inProgress">Inprogress</option>
+                    <option value="canceled">Canceled</option>
+                    <option value="done">Done</option>
+                </select>
+            </div>
+           </div>
             <div className="sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="overflow-x-auto">
@@ -149,7 +182,7 @@ const AllBloodDonationRequest = () => {
                                 </tr>
                             </thead>
                             <tbody className="text-center">
-                                {data.map((item, index) => (
+                                {filteredData.map((item, index) => (
                                     <tr key={item._id} className="border-b border-neutral-200">
                                         <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
                                         <td className="whitespace-nowrap px-6 py-4">{item?.recipientName}</td>
@@ -160,18 +193,18 @@ const AllBloodDonationRequest = () => {
                                         <td className="whitespace-nowrap px-6 py-4">{item.requesterName} <br /> {item.requesterEmail}</td>
                                         {/* condition used by status */}
                                         {item.status === 'inProgress' ? <>
-                                        <td>
-
-                                        </td>
                                             <td>
-                                                <button 
-                                                    onClick={()=>handleStatusUpdate(item._id , 'done')} className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">done
+
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleStatusUpdate(item._id, 'done')} className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">done
                                                 </button>
                                             </td>
                                             <td>
                                                 <button
-                                                onClick={()=>handleStatusUpdate(item._id , 'canceled')}
-                                                className="py-3 px-6 text-white rounded-lg bg-[#2a2a4c] shadow-lg block md:inline-block  ">cancel
+                                                    onClick={() => handleStatusUpdate(item._id, 'canceled')}
+                                                    className="py-3 px-6 text-white rounded-lg bg-[#2a2a4c] shadow-lg block md:inline-block  ">cancel
                                                 </button>
                                             </td>
                                         </> : <>
@@ -184,8 +217,8 @@ const AllBloodDonationRequest = () => {
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">
                                                 <Link
-                                                onClick={handleCheck}
-                                                to={role !== 'volunteer' ? `/dashboard/edit/${item._id}` : undefined}>
+                                                    onClick={handleCheck}
+                                                    to={role !== 'volunteer' ? `/dashboard/edit/${item._id}` : undefined}>
                                                     <button className="py-3 px-6 text-white rounded-lg bg-green-500 shadow-lg block md:inline-block  ">Edit
                                                         <TbEdit size={20} />
                                                     </button>

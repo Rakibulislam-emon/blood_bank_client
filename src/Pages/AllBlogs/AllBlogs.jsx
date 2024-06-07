@@ -1,11 +1,9 @@
-import React from "react";
+// import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosCommon from "../../Hooks/useAxiosCommon";
 import { Link } from "react-router-dom";
-import useAuth from "../../Hooks/useAuth";
 
 const AllBlogs = () => {
-    const {user} = useAuth()
     const axiosCommon = useAxiosCommon();
     const { data: blogs = [] } = useQuery({
         queryKey: ['blogs'],
@@ -19,7 +17,7 @@ const AllBlogs = () => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     };
-
+ console.log(blogs)
     const defaultImage = 'https://ibb.co/nLKD1Gg';
 
     return (
@@ -33,7 +31,9 @@ const AllBlogs = () => {
                 </div>
                 <div
                     className="mx-auto mt-8 grid max-w-2xl auto-rows-fr grid-cols-1 gap-8 sm:mt-12 lg:mx-0 lg:max-w-none lg:grid-cols-3 ">
-                    {blogs.map(blog => (
+                    {blogs
+                    .filter(blog =>blog.status === 'published')
+                    .map(blog => (
                         <Link
                             to={`/blogDetails/${blog._id}`}
                             key={blog._id}
@@ -50,7 +50,7 @@ const AllBlogs = () => {
                                         <circle cx="1" cy="1" r="1"></circle>
                                     </svg>
                                     <div className="flex gap-x-2.5">
-                                        <img src={user?.photoURL} alt="" className="h-6 w-6 flex-none rounded-full bg-white/10" />{user?.displayName}
+                                        <img src={blog?.photoURL} alt="" className="h-6 w-6 flex-none rounded-full bg-white/10" />{blog?.displayName}
                                     </div>
                                 </div>
                             </div>

@@ -6,7 +6,9 @@ import { imageUpload } from "../../Components/Utils";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
 const SignUp = () => {
+    const [sortedUpazila ,setSortedUpazila] = useState([])
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
     const axiosCommon = useAxiosCommon()
@@ -30,6 +32,13 @@ const SignUp = () => {
         },
     })
     console.log(upozilas);
+ 
+    // sort upozilas
+     useEffect(() => {
+        const sorted =[...upozilas].sort((a, b) =>a.name.localeCompare(b.name))
+        setSortedUpazila(sorted)
+     },[upozilas])
+
 
     const handleCreateUser = async (e) => {
         e.preventDefault();
@@ -210,7 +219,7 @@ const SignUp = () => {
                                         <option value="">Select upazila</option>
                                         {/* Add options for upazilas */}
                                         {
-                                            upozilas && upozilas.map((upozila) => {
+                                            sortedUpazila && sortedUpazila.map((upozila) => {
                                                 return (
                                                     <option key={upozila._id} value={upozila.name}>
                                                         {upozila.name}
