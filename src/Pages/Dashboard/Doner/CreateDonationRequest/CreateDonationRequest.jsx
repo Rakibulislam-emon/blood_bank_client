@@ -32,7 +32,7 @@ const CreateDonationRequest = () => {
     useEffect(() => {
         const sorted = [...upozilas].sort((a, b) =>a.name.localeCompare(b.name))
          setSortedUpazila(sorted)
-    })
+    }, [upozilas])
     // form submission
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -96,7 +96,7 @@ const CreateDonationRequest = () => {
     }
 
     return (
-        <div className="flex mr-8 items-center justify-center  " >
+        <div className="flex mr-8 items-center  justify-center " >
             <div className="mx-auto w-full rounded-2xl " style={{ background: 'linear-gradient(to right, #667eea, #764ba2)' }}>
             <h1 className="text-2xl font-bold text-center text-[#07074D] mb-8">Blood Donation Request Form</h1> {/* Add your title here */}
                 <form className="p-10" onSubmit={handleSubmit}>

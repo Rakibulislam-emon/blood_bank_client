@@ -1,15 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosCommon from "../../../Hooks/useAxiosCommon";
 import { useEffect, useState } from "react";
-import './SearchDonor.css'
+import './SearchDonor.css';
+import SearchDonerTable from "./SearchDonerTable/SearchDonerTable";
+import toast from "react-hot-toast";
+
 const SearchDonor = () => {
     const [bloodGroup, setBloodGroup] = useState('');
     const [district, setDistrict] = useState('');
     const [upazila, setUpazila] = useState('');
     const [donors, setDonors] = useState([]);
-    const [sortedUpazila, setSortedUpazila] = useState([])
-    const axiosCommon = useAxiosCommon()
-    
+    const [sortedUpazila, setSortedUpazila] = useState([]);
+    const axiosCommon = useAxiosCommon();
+
     const { data: divisions = [] } = useQuery({
         queryKey: ['divisions'],
         queryFn: async () => {
@@ -17,53 +20,50 @@ const SearchDonor = () => {
             return res.data;
         },
     });
+
     const { data: upozilas = [] } = useQuery({
         queryKey: ['upozilas'],
         queryFn: async () => {
             const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/upozila`);
             return res.data;
         },
-    })
- 
-     useEffect(()=>{
-        if(upozilas && upozilas.length > 0) {
-            const sorted = [...upozilas].sort((a,b)=>a.name.localeCompare(b.name));
+    });
+
+    useEffect(() => {
+        if (upozilas && upozilas.length > 0) {
+            const sorted = [...upozilas].sort((a, b) => a.name.localeCompare(b.name));
             setSortedUpazila(sorted);
         }
-     },[upozilas])
-  
+    }, [upozilas]);
 
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log(bloodGroup, district, upazila);
         axiosCommon.get(`${import.meta.env.VITE_API_URL}/donors?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`)
             .then(res => {
-                console.log(res.data);
                 setDonors(res.data);
+                console.log(donors.length);
+                if(donors.length === 0){
+                    toast.error('no data found for your search term');
+                }
+            
             })
             .catch(err => {
                 console.log(err);
-            })
-    }
-    //   const handleSearch = (e) => {
-    //     const {data } = useQuery({
-    //         queryKey: ['donors'],
-    //         queryFn: async () => {
-    //            const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/donors?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`)
-    //            return res.data;
-    //         },
-    //     })
-    //   }
-    //     console.log(data[0].bloodGroup);
+            });
+    };
+
+  
 
     return (
-        <div className="">
-            <div className=" grid items-center justify-center">
+        <div className="p-4">
+            <div className="flex flex-col items-center justify-center">
                 <label htmlFor="bloodGroup" className="mb-2 text-center text-sm font-medium text-gray-900 dark:text-gray-400">Select Blood Group</label>
-                <form onSubmit={handleSearch}>
-                    <div className="flex gap-x-2">
-
-                        <select id="bloodGroup" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block max-w-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                <form onSubmit={handleSearch} className="w-full max-w-2xl">
+                    <div className="flex flex-col lg:flex-row gap-2">
+                        <select
+                            required
+                            id="bloodGroup"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setBloodGroup(e.target.value)}
                             value={bloodGroup}
                         >
@@ -78,45 +78,50 @@ const SearchDonor = () => {
                             <option value="O-">O-</option>
                         </select>
 
-                        <select id="district" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block max-w-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        <select
+                            required
+                            id="district"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setDistrict(e.target.value)}
                             value={district}
                         >
-                            <option value={""}>Select your division</option>
-                            {
-                                divisions && divisions.map((division) => {
-                                    return (
-                                        <option key={division._id} value={division.name}>
-                                            {division.name}
-                                        </option>
-                                    );
-                                })
-                            }
+                            <option value="">Select your division</option>
+                            {divisions.map((division) => (
+                                <option key={division._id} value={division.name}>
+                                    {division.name}
+                                </option>
+                            ))}
                         </select>
 
-                        <select id="upazila" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block max-w-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        <select
+                            required
+                            id="upazila"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setUpazila(e.target.value)}
                             value={upazila}
                         >
                             <option value="">Select upazila</option>
-                            {
-                                sortedUpazila && sortedUpazila.map((upozila) => {
-                                    return (
-                                        <option key={upozila._id} value={upozila.name}>
-                                            {upozila.name}
-                                        </option>
-                                    );
-                                })
-                            }
+                            {sortedUpazila.map((upozila) => (
+                                <option key={upozila._id} value={upozila.name}>
+                                    {upozila.name}
+                                </option>
+                            ))}
                         </select>
-                        <button type="submit" className="button flex">
-                            <span>
-                                search
-                            </span>
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 hover:bg-blue-600 transition"
+                        >
+                            Search
                         </button>
                     </div>
-
                 </form>
+                {donors.length > 0 && (
+                    <div className="w-full mt-4">
+                        {donors.map(donor => (
+                            <SearchDonerTable donor={donor} key={donor._id} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

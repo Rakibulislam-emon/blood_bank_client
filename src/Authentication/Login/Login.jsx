@@ -1,10 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet-async";
 const Login = () => {
+ 
   const navigate = useNavigate()
-  const { signIn } = useAuth()
+  const { signIn , } = useAuth()
+  const location = useLocation()
+  const from = location?.state || '/'
   const handleLogin = async (e) => {
     e.preventDefault()
     const form = e.target
@@ -15,12 +18,14 @@ const Login = () => {
       const res = await signIn(email, password)
       console.log(res);
       toast.success('logged in successfully')
-      navigate('/')
+
+      navigate(from)
     } catch (err) {
       toast.error('failed to login with error: ' + err)
 
     }
   }
+  
   return (
     <div>
       <Helmet title=" Login" />

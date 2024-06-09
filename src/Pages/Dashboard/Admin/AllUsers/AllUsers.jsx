@@ -3,12 +3,15 @@ import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { FaUserShield, FaUserCheck, FaLock, FaUnlock } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Swal from 'sweetalert2';
+import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
 const AllUsers = () => {
+    const [role] = useGetAllUsersRole()
+    console.log('role:', role)
     const axiosSecure = useAxiosSecure();
     const { data: users = [], refetch, isLoading } = useQuery({
         queryKey: ['allUsers'],
         queryFn: async () => {
-            const res = await axiosSecure.get('allUsers');
+            const res = await axiosSecure.get('/allUsers');
             return res.data;
         },
     });
@@ -20,8 +23,8 @@ const AllUsers = () => {
     };
 
     const handleRoleChange = async (userId, newRole) => {
-         console.log(userId);
-       
+        console.log(userId);
+
 
         Swal.fire({
             title: "Are you sure?",
@@ -33,14 +36,14 @@ const AllUsers = () => {
             confirmButtonText: "promote!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axiosSecure.patch(`userRole/${userId}`, { role: newRole })                    
-                .then((response) => {
+                axiosSecure.patch(`userRole/${userId}`, { role: newRole })
+                    .then((response) => {
                         console.log(response.data);
-                        if(response.data.modifiedCount === 0) {
+                        if (response.data.modifiedCount === 0) {
                             toast.error('cant be the same role updated')
                         }
-                        if(response.data.modifiedCount > 0) {
-                           
+                        if (response.data.modifiedCount > 0) {
+
                             Swal.fire({
                                 title: "promoted successfully",
                                 text: " ",
@@ -59,19 +62,19 @@ const AllUsers = () => {
                     });
             }
         });
-      
-        
-    //    const res = await axiosSecure.patch(`userRole/${userId}`, { role: newRole });
-    //    console.log(res.data);
-    //    if(res.data.modifiedCount > 0){
-    //     toast.success('promoted  successfully')
-    //    }
-    //     refetch();
+
+
+        //    const res = await axiosSecure.patch(`userRole/${userId}`, { role: newRole });
+        //    console.log(res.data);
+        //    if(res.data.modifiedCount > 0){
+        //     toast.success('promoted  successfully')
+        //    }
+        //     refetch();
     };
     console.log(users);
-    if(isLoading){
+    if (isLoading) {
         return <h1 className="text-center">Loading...</h1>
-    }           
+    }
 
     return (
         <div className="">
@@ -108,6 +111,7 @@ const AllUsers = () => {
                                 <td className="px-4 py-2">
                                     {user.status === 'active' ? (
                                         <button
+                                         disabled={user.role === 'admin'}
                                             onClick={() => handleBlockUnblock(user._id, user.status)}
                                             className="btn btn-ghost btn-xs h-10 bg-red-500 text-white    mr-2"
                                         >
@@ -120,10 +124,11 @@ const AllUsers = () => {
                                             className="btn btn-ghost btn-xs bg-green-500 text-white h-10 p-2 mr-2"
                                         >
                                             <FaUnlock />
-
+                                            UnBlock
                                         </button>
                                     )}
                                     <button
+                                    disabled={user.role === 'admin'}
                                         onClick={() => handleRoleChange(user._id, 'volunteer')}
                                         className="btn btn-ghost btn-xs bg-blue-500 text-white h-10  mr-2"
                                     >
@@ -131,6 +136,7 @@ const AllUsers = () => {
                                         volunteer
                                     </button>
                                     <button
+                                    disabled={user.role === 'admin'}
                                         onClick={() => handleRoleChange(user._id, 'admin')}
                                         className="btn btn-ghost btn-xs bg-purple-500 text-white h-10  p-4"
                                     >

@@ -18,6 +18,10 @@ import DonationRequests from "../Pages/DonationRequests/DonationRequests";
 import DonationRequestsDetails from "../Pages/DonationRequests/DonationRequestsDetails";
 import AllBlogs from "../Pages/AllBlogs/AllBlogs";
 import SearchDonor from "../Pages/Home/SearchDonor/SearchDonor";
+import NotFound from "../Components/Shared/NotFound/NotFound";
+import FoundingPage from "../Pages/FoundingPage/FoundingPage";
+import Payment from "../Pages/FoundingPage/Payment/Payment";
+import PrivateRoute from "./PrivateRoute";
 
 
 
@@ -25,6 +29,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <Main />,
+        errorElement:<NotFound/>,
         children: [
             {
                 path: '/',
@@ -32,7 +37,7 @@ export const router = createBrowserRouter([
             },
             {
                 path:'/search-donor',
-                element:<SearchDonor/>
+                element:<PrivateRoute><SearchDonor/></PrivateRoute>
             },
             {
                 path: 'donation-requests',
@@ -52,54 +57,60 @@ export const router = createBrowserRouter([
                 element:<BlogDetails/>,
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/getBlogs/${params.id}`)
             },
+            {
+                path:'/funding',
+                element: <FoundingPage/>
+            },
+            {
+                path: '/payment',
+                element: <PrivateRoute><Payment/></PrivateRoute>
+            }
         ]
     },
     // dashboard
     {
         path: 'dashboard',
-        element: <Dashboard />,
+        element: <PrivateRoute><Dashboard /></PrivateRoute>,
         children: [
             {
                 path: '',
-                element: <DashboardHome />
+                element: <PrivateRoute><DashboardHome /></PrivateRoute>
             },
           
             {
                 path: 'profile',
-                element: <Profile />
+                element:<PrivateRoute> <Profile /></PrivateRoute>
             },
             // users links
             {
                 path: 'create-donation-request',
-                element: <CreateDonationRequest />
+                element: <PrivateRoute><CreateDonationRequest /></PrivateRoute>
             },
             {
                 path: 'my-donation-requests',
-                element: <MyDonationRequests />
+                element: <PrivateRoute><MyDonationRequests /></PrivateRoute>
             },
             {
                 path: 'edit/:id',
-                element: <DonerRequestEdit />,
+                element: <PrivateRoute><DonerRequestEdit /></PrivateRoute>,
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/edit/${params.id}`)
             },
             // admin links
             {
                 path: 'all-users',
-                element: <AllUsers />
+                element:<PrivateRoute> <AllUsers /></PrivateRoute>
             },
             {
                 path:'content-management',
-                element:<ContentManageMent/>
+                element:<PrivateRoute><ContentManageMent/></PrivateRoute>
             },
-            // problem links
-           
             {
                 path: 'add-blog',
-                element:<AddBlogs/>
+                element:<PrivateRoute><AddBlogs/></PrivateRoute>
             },
             {
                 path:'all-blood-donation-request',
-                element:<AllBloodDonationRequest/>
+                element:<PrivateRoute><AllBloodDonationRequest/></PrivateRoute>
             }
           
         ]

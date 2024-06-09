@@ -92,7 +92,7 @@ const Profile = () => {
     }
 
     return (
-     <div className="border">
+     <div className="border ">
            <form onSubmit={handleUpdate} className="w-full min-h-screen py-1 mx-auto bg-gray-50">
             <div className="p-2 md:p-4">
                 <div className="w-full border-red-600 border-4 px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg mx-auto bg-white shadow-md">

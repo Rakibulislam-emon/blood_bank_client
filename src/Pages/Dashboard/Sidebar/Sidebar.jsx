@@ -19,7 +19,7 @@ const Sidebar = () => {
   console.log('role:', role)
   console.log(user);
   return (
-    <nav className="bg-[#121e31] h-screen fixed top-0 left-0 min-w-[250px] py-6 px-4 font-[sans-serif] tracking-wide overflow-auto">
+    <nav className="bg-[#121e31]  top-0 left-0 py-6 px-4 font-[sans-serif] tracking-wide overflow-auto">
       <Link to={''} className="flex flex-wrap items-center gap-4 cursor-pointer">
         <img src={user?.photoURL} className="w-10 h-10 rounded-full border-2 border-white" />
         <div>

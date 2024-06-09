@@ -97,15 +97,6 @@ const DonerHomePage = () => {
 
 
 
-
-        //   const result = await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/updateStatus/${id}`, {
-        //     status: status
-        // })
-        // if (result.data.modifiedCount > 0) {
-        //     toast.success('confirmed')
-        // }
-        // console.log(result.data);
-
     }
 
     if (isLoading) {
@@ -114,10 +105,10 @@ const DonerHomePage = () => {
 
     return (
         <div className="flex  flex-col overflow-x-auto">
-            {data?.length}
             <div className="sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="overflow-x-auto">
+                        {data.length}
                         <table className="min-w-full  font-bold text-start text-sm  text-surface">
                             <thead className="border-b text-center bg-black text-white border-neutral-200 font-medium">
                                 <tr>

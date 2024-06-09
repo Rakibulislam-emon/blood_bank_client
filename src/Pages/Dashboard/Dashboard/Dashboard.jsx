@@ -3,18 +3,16 @@ import Sidebar from "../Sidebar/Sidebar";
 
 const Dashboard = () => {
   return (
-    <div className=' lg:min-h-screen md:flex '>
+    <div className="min-h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Outlet --> Dynamic content */}
-      <div className='flex-1 md:ml-80 md:mr-2'>
-        <div className='p-5'>
-          <Outlet />
-        </div>
+      <div className="flex-1 p-5">
+        <Outlet />
       </div>
     </div>
   );
 };
 
-export default Dashboard; 
+export default Dashboard;

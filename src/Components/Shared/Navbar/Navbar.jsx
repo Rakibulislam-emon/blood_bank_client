@@ -65,7 +65,7 @@ const navigate = useNavigate()
                                     <Navitems title={'Blogs'} path={'/all-blogs'} />
                                 </li>
                                 <li>
-                                    <Navitems title={'Funding'} path={'founding'} />
+                                    <Navitems title={'Funding'} path={'/funding'} />
                                 </li>
                                { user ? <li className="relative  mt-4">
                                     <button
