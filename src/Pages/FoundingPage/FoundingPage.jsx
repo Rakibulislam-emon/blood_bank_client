@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
 
 const FoundingPage = () => {
     const axiosSecure = useAxiosSecure();
@@ -19,6 +20,7 @@ const FoundingPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-10">
+            <Helmet title="donations"/>
             <div className="container mx-auto">
                 <div className="flex flex-col items-center justify-center mb-8">
                     <h1 className="text-4xl font-bold italic mb-4">All Donations</h1>

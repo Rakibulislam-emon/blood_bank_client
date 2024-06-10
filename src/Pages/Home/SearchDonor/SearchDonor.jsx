@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosCommon from "../../../Hooks/useAxiosCommon";
 import { useEffect, useState } from "react";
 import './SearchDonor.css';
-import SearchDonerTable from "./SearchDonerTable/SearchDonerTable";
+// import SearchDonerTable from "./SearchDonerTable/SearchDonerTable";
 import toast from "react-hot-toast";
 
 const SearchDonor = () => {
@@ -41,8 +41,8 @@ const SearchDonor = () => {
         axiosCommon.get(`${import.meta.env.VITE_API_URL}/donors?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`)
             .then(res => {
                 setDonors(res.data);
-                console.log(donors.length);
-                if(donors.length === 0){
+               
+                if(res.data.length === 0){
                     toast.error('no data found for your search term');
                 }
             
@@ -117,9 +117,47 @@ const SearchDonor = () => {
                 </form>
                 {donors.length > 0 && (
                     <div className="w-full mt-4">
-                        {donors.map(donor => (
-                            <SearchDonerTable donor={donor} key={donor._id} />
-                        ))}
+                        <div className="overflow-x-auto">
+            <table className="table w-full text-center text-md md:text-xl bg-white shadow-md rounded-lg">
+                <thead className="bg-gray-200 text-xl font-bold">
+                    <tr>
+                        <th className="px-4 py-2">Avatar</th>
+                        <th className="px-4 py-2">Email</th>
+                        <th className="px-4 py-2">Name</th>
+                        <th className="px-4 py-2">District</th>
+                        <th className="px-4 py-2">Upazila</th>
+                        <th className="px-4 py-2">Role</th>
+                        <th className="px-4 py-2">Status</th>
+                    </tr>
+                </thead>
+                {
+                    donors.map(donor => <tbody key={donor._id}>
+
+                        <tr className="hover:bg-gray-50">
+    
+                            <td className="px-4 py-2">
+                                <div className="flex items-center gap-3 text-sm">
+                                    <div className=" mx-auto ">
+                                        <div className="mask  mask-squircle w-12 h-12">
+                                            <img src={donor.image} alt="User Avatar" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="px-4 py-2">{donor.email}</td>
+                            <td className="px-4 py-2">{donor.name}</td>
+                            <td className="px-4 py-2">{donor.district}</td>
+                            <td className="px-4 py-2">{donor.upazila}</td>
+                            <td className="px-4 py-2">{donor.role}</td>
+                            <td className="px-4 py-2">{donor.status}</td>
+    
+                        </tr>
+                    </tbody>)
+                }
+            </table>
+
+
+        </div>
                     </div>
                 )}
             </div>

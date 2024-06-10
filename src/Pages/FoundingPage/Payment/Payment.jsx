@@ -2,6 +2,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from '@stripe/react-stripe-js';
 import CheckOutForm from "../CheckOutForm/CheckOutForm";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
 const Payment = () => {
     const [amount, setAmount] = useState("");
@@ -20,6 +21,7 @@ const Payment = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <Helmet title="payment"/>
             <div className="max-w-md w-full">
                 <form onSubmit={handleSetValue} className="text-center mb-8">
                     <input

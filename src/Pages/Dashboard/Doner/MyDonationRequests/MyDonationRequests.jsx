@@ -103,7 +103,7 @@ const MyDonationRequests = () => {
     }
 
     if (isLoading) {
-        return <span className="loading flex left-0 loading-spinner loading-lg"></span>;
+        return <span className="loading flex left-0 loading-spinner loading-lg"> </span>;
     }
     if (data.length === 0) {
         return <span className="loading" />

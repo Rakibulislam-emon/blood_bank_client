@@ -44,7 +44,7 @@ const CheckOutForm = ({ amount, resetFormInput }) => {
             console.log('[error]', error);
             toast.error(error.message);
         } else {
-            toast.success('Payment Method Created');
+            toast.success('Payment Created',paymentMethod);
         }
 
         const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {

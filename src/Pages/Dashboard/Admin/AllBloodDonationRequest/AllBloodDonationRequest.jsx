@@ -11,6 +11,7 @@ import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 // import toast from "react-hot-toast";
 
 
@@ -82,7 +83,7 @@ const AllBloodDonationRequest = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: `"Yes, ${status} it!"`
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/updateStatus/${id}`, {
@@ -91,8 +92,8 @@ const AllBloodDonationRequest = () => {
                     .then((response) => {
                         console.log(response.data);
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: `${status}`,
+                            text: `The request has been ${status}.`,
                             icon: "success"
                         });
                         refetch();
@@ -149,6 +150,7 @@ const AllBloodDonationRequest = () => {
  
     return (
         <div className="flex flex-col overflow-x-auto">
+            <Helmet title="blood-donation-request"/>
            <div className="flex justify-end">
            <div >
                 <span>Sort by</span>

@@ -107,8 +107,19 @@ const DonerHomePage = () => {
         <div className="flex  flex-col overflow-x-auto">
             <div className="sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                    <div className="overflow-x-auto">
-                        {data.length}
+                <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-40 flex flex-col items-center justify-center shadow-lg rounded-lg p-4">
+                <h3 className="text-4xl text-white font-bold">
+                    Welcome, {user?.displayName}!
+                </h3>
+                <p className="text-lg text-white mt-2">
+                    We're glad to have you back. Dive into your dashboard to manage your activities and explore new features.
+                </p>
+                <p className="text-sm text-white italic mt-1">
+                    "The best way to find yourself is to lose yourself in the service of others." - 
+                </p>
+            </div>                   
+                     <div className="overflow-x-auto">
+
                         <table className="min-w-full  font-bold text-start text-sm  text-surface">
                             <thead className="border-b text-center bg-black text-white border-neutral-200 font-medium">
                                 <tr>
@@ -123,8 +134,8 @@ const DonerHomePage = () => {
                                     <th scope="col" className="px-6 py-4 ">action</th>
                                     <th scope="col" className="px-6 py-4"></th>
                                     <th scope="col" className="px-6 py-4"></th>
-                                    
-                                   
+
+
                                 </tr>
                             </thead>
                             <tbody className="text-center">
@@ -137,9 +148,9 @@ const DonerHomePage = () => {
                                         <td className="whitespace-nowrap px-6 py-4">{item?.requestedData} <br /> {item?.requestedTime}</td>
                                         <td className="whitespace-nowrap px-6 py-4">{item?.status}</td>
                                         <td className="whitespace-nowrap px-6 py-4">{item?.requesterName} <br /> {item?.requesterEmail}</td>
-                                        
-                                        
-                                        
+
+
+
                                         {/* condition used by status */}
                                         {item?.status !== 'pending' ? <>
                                             <td>

@@ -3,6 +3,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { CiViewList } from "react-icons/ci";
 import Container from "../../Components/Shared/Container/Container";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const DonationRequests = () => {
     const axiosSecure = useAxiosSecure();
@@ -20,6 +21,7 @@ const DonationRequests = () => {
     }
     return (
       <Container>
+        <Helmet title="Donation Requests"/>
           <div className="flex flex-col items-center justify-center mb-10  bg-gray-100 ">
             <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">All Donation Requests</h1>

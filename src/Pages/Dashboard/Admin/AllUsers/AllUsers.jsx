@@ -4,6 +4,7 @@ import { FaUserShield, FaUserCheck, FaLock, FaUnlock } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Swal from 'sweetalert2';
 import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
+import { Helmet } from "react-helmet-async";
 const AllUsers = () => {
     const [role] = useGetAllUsersRole()
     console.log('role:', role)
@@ -23,6 +24,7 @@ const AllUsers = () => {
     };
 
     const handleRoleChange = async (userId, newRole) => {
+        console.log('newRole:', newRole)
         console.log(userId);
 
 
@@ -78,6 +80,7 @@ const AllUsers = () => {
 
     return (
         <div className="">
+            <Helmet title="all-users"/>
             <h1 className="text-3xl ml-10">All Users ({users.length})</h1>
             <div className="overflow-x-auto">
                 <table className="table w-full text-center text-md md:text-xl bg-white shadow-md rounded-lg">

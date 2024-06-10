@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosCommon from "../../Hooks/useAxiosCommon";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const AllBlogs = () => {
     const axiosCommon = useAxiosCommon();
@@ -17,11 +18,10 @@ const AllBlogs = () => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     };
- console.log(blogs[0]?.thumbnail_image)
-    const defaultImage = 'https://ibb.co/nLKD1Gg';
 
     return (
         <div className="w-full dark:bg-gray-800  pb-8">
+            <Helmet title="all-blogs"/>
             <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-8">
                 <div className="mx-auto max-w-2xl text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">From The Blog</h2>
@@ -39,7 +39,7 @@ const AllBlogs = () => {
                             key={blog._id}
                             className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 dark:bg-gray-700 px-8 py-8 pb-8 pt-80 sm:pt-48 lg:pt-80"
                         >
-                            <img src={blog?.thumbnail_image} alt="" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+                            <img src={blog?.image} alt="" className="absolute inset-0 -z-10 h-full w-full object-cover" />
                             <div className="absolute inset-0 -z-10 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
                             <div className="absolute inset-0 -z-10 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
 
