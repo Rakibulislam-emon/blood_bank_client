@@ -3,11 +3,11 @@ import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { FaUserShield, FaUserCheck, FaLock, FaUnlock } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Swal from 'sweetalert2';
-import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
+// import useGetAllUsersRole from "../../../../Hooks/useGetAllUsersRole";
 import { Helmet } from "react-helmet-async";
 const AllUsers = () => {
-    const [role] = useGetAllUsersRole()
-    console.log('role:', role)
+    // const [role] = useGetAllUsersRole()
+    // console.log('role:', role)
     const axiosSecure = useAxiosSecure();
     const { data: users = [], refetch, isLoading } = useQuery({
         queryKey: ['allUsers'],
@@ -73,14 +73,13 @@ const AllUsers = () => {
         //    }
         //     refetch();
     };
-    console.log(users);
+    // console.log(users);
     if (isLoading) {
         return <h1 className="text-center">Loading...</h1>
     }
-
     return (
         <div className="">
-            <Helmet title="all-users"/>
+            <Helmet title="all-users" />
             <h1 className="text-3xl ml-10">All Users ({users.length})</h1>
             <div className="overflow-x-auto">
                 <table className="table w-full text-center text-md md:text-xl bg-white shadow-md rounded-lg">
@@ -114,7 +113,7 @@ const AllUsers = () => {
                                 <td className="px-4 py-2">
                                     {user.status === 'active' ? (
                                         <button
-                                         disabled={user.role === 'admin'}
+                                            disabled={user.role === 'admin'}
                                             onClick={() => handleBlockUnblock(user._id, user.status)}
                                             className="btn btn-ghost btn-xs h-10 bg-red-500 text-white    mr-2"
                                         >
@@ -131,17 +130,17 @@ const AllUsers = () => {
                                         </button>
                                     )}
                                     <button
-                                    disabled={user.role === 'admin'}
+                                        disabled={user.role === 'admin'}
                                         onClick={() => handleRoleChange(user._id, 'volunteer')}
-                                        className="btn btn-ghost btn-xs bg-blue-500 text-white h-10  mr-2"
+                                        className="btn btn-ghost btn-xs bg-blue-500 text-white h-10  my-4  mr-2"
                                     >
                                         <FaUserCheck />
                                         volunteer
                                     </button>
                                     <button
-                                    disabled={user.role === 'admin'}
+                                        disabled={user.role === 'admin'}
                                         onClick={() => handleRoleChange(user._id, 'admin')}
-                                        className="btn btn-ghost btn-xs bg-purple-500 text-white h-10  p-4"
+                                        className="btn btn-ghost btn-xs bg-purple-500 text-white h-10  p-2"
                                     >
                                         <FaUserShield />
                                         Admin

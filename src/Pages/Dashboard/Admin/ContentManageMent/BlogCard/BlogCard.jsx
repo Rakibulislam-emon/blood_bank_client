@@ -10,7 +10,7 @@ import { useState } from "react";
 const BlogCard = () => {
     const [filter, setFilter] = useState('')
     const [role] = useGetAllUsersRole()
-    console.log('role:', role)
+    // console.log('role:', role)
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -92,7 +92,7 @@ const BlogCard = () => {
             return blog.status === 'draft'
         } 
     })
-    console.log(filteredData[0]);
+    // console.log(filteredData[0]);
 
 
     return (
@@ -101,20 +101,20 @@ const BlogCard = () => {
                 <div className="h-1/3 bg-white sm:h-2/3"></div>
             </div>
 
-            <div className="relative mx-auto max-w-7xl">
-                <div className="right-0 absolute flex font-bold text-2xl">
-                    <div>
+            <div className="relative mx-auto  max-w-7xl">
+            <div className="lg:right-0 lg:absolute flex gap-x-2 font-bold text-2xl">
+                    <div className="flex ">
                         <span>Sort by</span>
                         <select
                             onChange={handleFilterChange}
-                            name="" className="border-red-500 p-4 border-4 mx-4">
+                            name="" className="border-red-500 lg:p-4 border-4  lg:mx-4 h-16">
                             <option value="">All</option>
                             <option value="published">Published</option>
                             <option value="draft">Drafts</option>
                         </select>
                     </div>
 
-                    <div className="flex rounded-lg bg-black text-white p-4">
+                    <div className="flex rounded-lg  justify-center items-center bg-black text-white h-16  lg:p-4">
                         <Link to={'/dashboard/add-blog'}>Add Blogs</Link>
                         <IoMdAdd size={40} />
                     </div>

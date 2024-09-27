@@ -6,6 +6,9 @@ import { imageUpload } from "../../../Components/Utils";
 import useAxiosCommon from "../../../Hooks/useAxiosCommon";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet-async";
+import backArrow from '../../../assets/images/arrow.png'
+import bloodBg from '../../../assets/images/bloodbg.jpg'
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const { user, updateUserProfile } = useAuth();
@@ -87,16 +90,38 @@ const Profile = () => {
     };
 
     return (
-        <div className="border">
-            <Helmet title="profile"/>
-            <form onSubmit={handleUpdate} className="w-full min-h-screen py-1 mx-auto bg-gray-50">
-                <div className="p-2 md:p-4">
-                    <div className="w-full border-red-600 border-4 px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg mx-auto bg-white shadow-md">
-                        <h2 className="pl-6 text-2xl font-bold sm:text-xl text-indigo-900">Public Profile</h2>
+        <div className="" style={{
+            // background image 
+            backgroundImage: `url(${bloodBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            minHeight: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontFamily: 'Poppins, sans-serif',
+        }}>
+            <Helmet title="Profile" />
+            <form onSubmit={handleUpdate} className="w-full min-h-screen  mx-auto ">
+                <div className=" md:p-4">
+
+                    <div className="max-w-xl mx-auto mt-8 bg-white rounded-lg shadow-md border border-red-600 px-6 pb-8">
+                        <Link to={'/dashboard'}>
+                            <button className="text-black flex space-x-2 items-center px-4 py-2">
+                                <img src={backArrow} className="h-4" alt="" />
+                                <p>go back</p>
+                            </button>
+                        </Link>
+                        <h2 className="text-3xl pt-4 font-bold text-indigo-900 mb-6 text-center">
+
+                            <span>Public Profile</span>
+                        </h2>
                         <div className="grid max-w-2xl mx-auto mt-8">
                             <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                                 <img
-                                    className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
+                                    className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300"
                                     src={data?.image}
                                     alt="Profile Avatar"
                                 />
@@ -104,41 +129,52 @@ const Profile = () => {
                                     <button
                                         type="button"
                                         onClick={handleEditClick}
-                                        className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200"
+                                        className="py-2 px-4 text-base font-medium text-white bg-[#202142] rounded-lg hover:bg-indigo-900 transition duration-200"
                                     >
                                         {toggle ? "Edit" : "Cancel"}
                                     </button>
                                     <button
                                         type="submit"
-                                        className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200"
+                                        className="py-2 px-4 text-base font-medium text-indigo-900 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-100 transition duration-200"
                                     >
                                         Save
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="items-center mt-8 sm:mt-14 text-[#202142]">
-                                <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
-                                    <div className="w-full">
-                                        <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-indigo-900">First Name</label>
-                                        <input 
-                                        required
-                                        name="firstName" type="text" id="firstName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.name?.split(' ')[0]} readOnly={toggle} />
+                            <div className="mt-8 text-[#202142]">
+                                <div className="flex flex-col items-center mb-2 sm:flex-row sm:space-x-4">
+                                    <div className="w-full mb-4 sm:mb-0">
+                                        <label htmlFor="firstName" className="block mb-1 text-sm font-medium text-indigo-900">First Name</label>
+                                        <input
+                                            required
+                                            name="firstName"
+                                            type="text"
+                                            id="firstName"
+                                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                            defaultValue={data?.name?.split(' ')[0]}
+                                            readOnly={toggle}
+                                        />
                                     </div>
                                     <div className="w-full">
-                                        <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-indigo-900">Last Name</label>
-                                        <input 
-                                        required
-                                        type="text" name="lastName" id="lastName" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.name?.split(' ')[1] || ''} readOnly={toggle} />
+                                        <label htmlFor="lastName" className="block mb-1 text-sm font-medium text-indigo-900">Last Name</label>
+                                        <input
+                                            required
+                                            type="text"
+                                            name="lastName"
+                                            id="lastName"
+                                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                            defaultValue={data?.name?.split(' ')[1] || ''}
+                                            readOnly={toggle}
+                                        />
                                     </div>
                                 </div>
 
-                                <div className="mb-2 sm:mb-6">
-                                    <label htmlFor="image" className="block mb-2 text-sm font-medium text-indigo-900">Profile Image</label>
+                                <div className="mb-4">
+                                    <label htmlFor="image" className="block mb-1 text-sm font-medium text-indigo-900">Profile Image</label>
                                     <input
-
-required
-name="image"
+                                        required
+                                        name="image"
                                         type="file"
                                         accept="image/*"
                                         className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
@@ -146,22 +182,34 @@ name="image"
                                     />
                                 </div>
 
-                                <div className="mb-2 sm:mb-6">
-                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-indigo-900">Email</label>
-                                    <input 
-                                    required
-                                    type="email" id="email" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.email} readOnly />
+                                <div className="mb-4">
+                                    <label htmlFor="email" className="block mb-1 text-sm font-medium text-indigo-900">Email</label>
+                                    <input
+                                        required
+                                        type="email"
+                                        id="email"
+                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        defaultValue={data?.email}
+                                        readOnly
+                                    />
                                 </div>
 
-                                <div className="mb-2 sm:mb-6">
-                                    <label htmlFor="profession" className="block mb-2 text-sm font-medium text-indigo-900">Profession</label>
-                                    <input 
-                                    required
-                                    name="profession" placeholder="Profession" type="text" id="profession" className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" defaultValue={data?.profession} readOnly={toggle} />
+                                <div className="mb-4">
+                                    <label htmlFor="profession" className="block mb-1 text-sm font-medium text-indigo-900">Profession</label>
+                                    <input
+                                        required
+                                        name="profession"
+                                        placeholder="Profession"
+                                        type="text"
+                                        id="profession"
+                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        defaultValue={data?.profession}
+                                        readOnly={toggle}
+                                    />
                                 </div>
 
-                                <div className="mb-2 sm:mb-6">
-                                    <label htmlFor="district" className="block mb-2 text-sm font-medium text-indigo-900">District</label>
+                                <div className="mb-4">
+                                    <label htmlFor="district" className="block mb-1 text-sm font-medium text-indigo-900">District</label>
                                     <select
                                         disabled={toggle}
                                         name="district"
@@ -177,8 +225,8 @@ name="image"
                                     </select>
                                 </div>
 
-                                <div className="mb-2 sm:mb-6">
-                                    <label htmlFor="upazila" className="block mb-2 text-sm font-medium text-indigo-900">Upazila</label>
+                                <div className="mb-4">
+                                    <label htmlFor="upazila" className="block mb-1 text-sm font-medium text-indigo-900">Upazila</label>
                                     <select
                                         disabled={toggle}
                                         name="upazila"
@@ -194,29 +242,38 @@ name="image"
                                     </select>
                                 </div>
 
-                                <div className="mb-2 sm:mb-6">
-                                    <label htmlFor="bloodGroup" className="block mb-2 text-sm font-medium text-indigo-900">Blood Group</label>
+                                <div className="mb-4">
+                                    <label htmlFor="bloodGroup" className="block mb-1 text-sm font-medium text-indigo-900">Blood Group</label>
                                     <select
+                                        disabled={toggle}
                                         name="bloodGroup"
                                         id="bloodGroup"
                                         className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                                        disabled={toggle}
                                     >
-                                        <option value="">{data?.bloodGroup}</option>
+                                        <option>{data?.bloodGroup}</option>
                                         <option value="A+">A+</option>
                                         <option value="A-">A-</option>
                                         <option value="B+">B+</option>
                                         <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
                                         <option value="O+">O+</option>
                                         <option value="O-">O-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
                                     </select>
                                 </div>
 
-                                <div className="mb-6">
-                                    <label htmlFor="bio" className="block mb-2 text-sm font-medium text-indigo-900">Bio</label>
-                                    <textarea name="bio" id="bio" rows="4" className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500" defaultValue={data?.bio} readOnly={toggle} />
+                                <div className="mb-4">
+                                    <label htmlFor="bio" className="block mb-1 text-sm font-medium text-indigo-900">Bio</label>
+                                    <textarea
+                                        required
+                                        name="bio"
+                                        id="bio"
+                                        rows="4"
+                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        placeholder="Tell us about yourself..."
+                                        defaultValue={data?.bio}
+                                        readOnly={toggle}
+                                    ></textarea>
                                 </div>
                             </div>
                         </div>

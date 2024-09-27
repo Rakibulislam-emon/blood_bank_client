@@ -6,11 +6,11 @@ import { TbEdit } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 // import { CiViewList } from "react-icons/ci";
 import Swal from 'sweetalert2';
-import useRole from "../../../../Hooks/useRole";
+// import useRole from "../../../../Hooks/useRole";
 
 const MyDonationRequests = () => {
-    const [status] = useRole();
-    console.log('status:', status);
+    // const [status] = useRole();
+    
 
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();

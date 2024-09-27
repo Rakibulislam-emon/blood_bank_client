@@ -4,284 +4,230 @@ import useAuth from "../../../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import useUserStatus from "../../../../Hooks/useUserStatus";
 import { useEffect, useState } from "react";
+import bloodBg from '../../../../assets/images/bloodbg.jpg';
 
 const CreateDonationRequest = () => {
-    const [sortedUpazila ,setSortedUpazila] =useState()
-   const [status ] = useUserStatus()
-  const blockedUserCheck = status;
-  console.log(blockedUserCheck);
-    const { user } = useAuth()
-    const axiosCommon = useAxiosCommon()
-    // get divisions data
-    const { data: divisions = [], } = useQuery({
-        queryKey: 'divisions',
+    const [sortedUpazila, setSortedUpazila] = useState();
+    const [status] = useUserStatus();
+    const blockedUserCheck = status;
+    const { user } = useAuth();
+    const axiosCommon = useAxiosCommon();
+
+    // Get divisions data
+    const { data: divisions = [] } = useQuery({
+        queryKey: ['divisions'],
         queryFn: async () => {
             const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/divisions`);
             return res.data;
         },
     });
-    // get upozilas data
+
+    // Get upazilas data
     const { data: upozilas = [] } = useQuery({
-        queryKey: 'upozilas',
+        queryKey: ['upozilas'],
         queryFn: async () => {
             const res = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/upozila`);
             return res.data;
         },
-    })
-    // sorted upozilas
+    });
+
+    // Sorted upazilas
     useEffect(() => {
-        const sorted = [...upozilas].sort((a, b) =>a.name.localeCompare(b.name))
-         setSortedUpazila(sorted)
-    }, [upozilas])
-    // form submission
+        const sorted = [...upozilas].sort((a, b) => a.name.localeCompare(b.name));
+        setSortedUpazila(sorted);
+    }, [upozilas]);
+
+    // Form submission
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        const form = e.target
-        const requesterName = form.requesterName.value
-        const requesterEmail = form.email.value
-        const recipientName = form.recipientName.value
-        const district = form.district.value
-        const upazila = form.upazila.value
-        const hospitalName = form.hospitalName.value
-        const bloodGroup = form.bloodGroup.value
-        const fullAddress = form.fullAddress.value
-        const requestedData = form.date.value
-        const requestedTime = form.time.value
-        const requestedMessage = form.message.value
-        const status = 'pending'
-        const today = new Date();
-
-        // Get the year, month, and day
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
-        const day = String(today.getDate()).padStart(2, '0'); // Add leading zero if needed
-
-        // Get the hours, minutes, and seconds
-        const hours = String(today.getHours()).padStart(2, '0'); // Add leading zero if needed
-        const minutes = String(today.getMinutes()).padStart(2, '0'); // Add leading zero if needed
-        const seconds = String(today.getSeconds()).padStart(2, '0'); // Add leading zero if needed
-
-        // Format the date and time
-        const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        console.log(formattedDateTime)
-        console.table(requesterName, requesterEmail, recipientName, district, upazila, hospitalName, bloodGroup, fullAddress, requestedData, requestedTime, requestedMessage, status)
+        e.preventDefault();
+        const form = e.target;
         const bloodRequestInfo = {
-            requesterName,
-            requesterEmail,
-            recipientName,
-            district,
-            upazila,
-            hospitalName,
-            bloodGroup,
-            fullAddress,
-            requestedData,
-            requestedTime,
-            requestedMessage,
-            status,
-            formattedDateTime
-        }
-        try {
-            if(blockedUserCheck === 'blocked'){
-                return toast.error('you have been blocked')
-            }
-            const res = await axiosCommon.post(`/bloodRequests/${user?.email}`, bloodRequestInfo)
-            console.log(res.data);
-            form.reset()
-            toast.success('Requested successful')
-        } catch (error) {
-            console.log(error);
-            toast.error('Something went wrong')
-        }
+            requesterName: form.requesterName.value,
+            requesterEmail: form.email.value,
+            recipientName: form.recipientName.value,
+            district: form.district.value,
+            upazila: form.upazila.value,
+            hospitalName: form.hospitalName.value,
+            bloodGroup: form.bloodGroup.value,
+            fullAddress: form.fullAddress.value,
+            requestedData: form.date.value,
+            requestedTime: form.time.value,
+            requestedMessage: form.message.value,
+            status: 'pending',
+            formattedDateTime: new Date().toISOString(),
+        };
 
-    }
+        try {
+            if (blockedUserCheck === 'blocked') {
+                return toast.error('You have been blocked');
+            }
+            const res = await axiosCommon.post(`/bloodRequests/${user?.email}`, bloodRequestInfo);
+            console.log(res.data);
+            form.reset();
+            toast.success('Request successful');
+        } catch (error) {
+            console.error(error);
+            toast.error('Something went wrong');
+        }
+    };
 
     return (
-        <div className="flex mr-8 items-center  justify-center " >
-            <div className="mx-auto w-full rounded-2xl " style={{ background: 'linear-gradient(to right, #667eea, #764ba2)' }}>
-            <h1 className="text-2xl font-bold text-center text-[#07074D] mb-8">Blood Donation Request Form</h1> {/* Add your title here */}
-                <form className="p-10" onSubmit={handleSubmit}>
-                    <div className="mb-5 ">
-                        <label htmlFor="requesterName" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Requester Name
-                        </label>
-                        <input
-                            required
-                            type="text"
-                            name="requesterName"
-                            id="requesterName"
-                            placeholder="Your Name"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            defaultValue={user?.displayName}
-                            readOnly
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="email" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Email Address
-                        </label>
-                        <input
-                            required
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="Your Email"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base 
-                            font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            defaultValue={user?.email}
-                            readOnly
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="recipientName" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Recipient Name
-                        </label>
-                        <input
-                            required
-                            type="text"
-                            name="recipientName"
-                            id="recipientName"
-                            placeholder="Recipient Name"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="district" className="mb-3 block text-base font-medium text-[#07074D]">
-                            District
-                        </label>
-                        <select
-                            name="district"
-                            id="district"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                        >
-                            {/* Add district options here */}
-                            <option>Select your division</option>
-                            {
-                                divisions && divisions.map((division) => {
-                                    return (
-                                        <option key={division._id} value={division.name}>
-                                            {division.name}
-                                        </option>
-                                    );
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="upazila" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Upazila
-                        </label>
-                        <select
-                            name="upazila"
-                            id="upazila"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                        >
-                            {/* Add upazila options here */}
-                            {
-                                sortedUpazila && sortedUpazila.map((upozila) => {
-                                    return (
-                                        <option key={upozila._id} value={upozila.name}>
-                                            {upozila.name}
-                                        </option>
-                                    );
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="hospitalName" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Hospital Name
-                        </label>
-                        <input
-                            required
-                            type="text"
-                            name="hospitalName"
-                            id="hospitalName"
-                            placeholder="Hospital Name"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="bloodGroup" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Blood Group
-                        </label>
-                        <select
-                            name="bloodGroup"
-                            required
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                        >
-                            <option value="">Select blood group</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="fullAddress" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Full Address
-                        </label>
-                        <input
-                            required
-                            type="text"
-                            name="fullAddress"
-                            id="fullAddress"
-                            placeholder="Please kindly give your Full Address"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                        />
+        <div className="flex items-center justify-center p-6"
+            style={{
+                // background image 
+                backgroundImage: `url(${bloodBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll',
+                minHeight: '100vh',
+                color: 'white',
+                fontFamily: 'Poppins, sans-serif'
+            }}>
+            <div className="mx-auto w-full max-w-lg rounded-2xl shadow-lg" style={{ background: 'linear-gradient(to right, #667eea, #764ba2)' }}>
+                <h1 className="text-2xl font-bold text-center text-white mb-8">Blood Donation Request Form</h1>
+                <form className="p-8 bg-white rounded-lg" onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="mb-5">
+                            <label htmlFor="requesterName" className="block text-base font-medium text-gray-700 mb-2">Requester Name</label>
+                            <input
+                                required
+                                type="text"
+                                name="requesterName"
+                                id="requesterName"
+                                placeholder="Your Name"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                defaultValue={user?.displayName}
+                                readOnly
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-2">Email Address</label>
+                            <input
+                                required
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Your Email"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                defaultValue={user?.email}
+                                readOnly
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="recipientName" className="block text-base font-medium text-gray-700 mb-2">Recipient Name</label>
+                            <input
+                                required
+                                type="text"
+                                name="recipientName"
+                                id="recipientName"
+                                placeholder="Recipient Name"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="district" className="block text-base font-medium text-gray-700 mb-2">District</label>
+                            <select
+                                name="district"
+                                id="district"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                <option>Select your division</option>
+                                {divisions && divisions.map((division) => (
+                                    <option key={division._id} value={division.name}>{division.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="upazila" className="block text-base font-medium text-gray-700 mb-2">Upazila</label>
+                            <select
+                                name="upazila"
+                                id="upazila"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                {sortedUpazila && sortedUpazila.map((upozila) => (
+                                    <option key={upozila._id} value={upozila.name}>{upozila.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="hospitalName" className="block text-base font-medium text-gray-700 mb-2">Hospital Name</label>
+                            <input
+                                required
+                                type="text"
+                                name="hospitalName"
+                                id="hospitalName"
+                                placeholder="Hospital Name"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="bloodGroup" className="block text-base font-medium text-gray-700 mb-2">Blood Group</label>
+                            <select
+                                name="bloodGroup"
+                                required
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                <option value="">Select blood group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="fullAddress" className="block text-base font-medium text-gray-700 mb-2">Full Address</label>
+                            <input
+                                required
+                                type="text"
+                                name="fullAddress"
+                                id="fullAddress"
+                                placeholder="Please kindly give your Full Address"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
+                        </div>
                     </div>
                     <div className="-mx-3 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/2">
-                            <div className="mb-5">
-                                <label htmlFor="date" className="mb-3 block text-base font-medium text-[#07074D]">
-                                    Date
-                                </label>
-                                <input
-                                    required
-                                    type="date"
-                                    name="date"
-                                    id="date"
-                                    className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                                />
-                            </div>
+                        <div className="w-full px-3 sm:w-1/2 mb-5">
+                            <label htmlFor="date" className="block text-base font-medium text-gray-700 mb-2">Date</label>
+                            <input
+                                required
+                                type="date"
+                                name="date"
+                                id="date"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
                         </div>
-                        <div className="w-full px-3 sm:w-1/2">
-                            <div className="mb-5">
-                                <label htmlFor="time" className="mb-3 block text-base font-medium text-[#07074D]">
-                                    Time
-                                </label>
-                                <input
-                                    required
-                                    type="time"
-                                    name="time"
-                                    id="time"
-                                    className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                                />
-                            </div>
+                        <div className="w-full px-3 sm:w-1/2 mb-5">
+                            <label htmlFor="time" className="block text-base font-medium text-gray-700 mb-2">Time</label>
+                            <input
+                                required
+                                type="time"
+                                name="time"
+                                id="time"
+                                className="w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
                         </div>
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="message" className="mb-3 block text-base font-medium text-[#07074D]">
-                            Request Message
-                        </label>
+                        <label htmlFor="message" className="block text-base font-medium text-gray-700 mb-2">Message</label>
                         <textarea
                             name="message"
                             id="message"
-                            placeholder="Your message"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            placeholder="Your Message"
+                            className="w-full h-24 rounded-md border border-gray-300 bg-white py-3 px-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         ></textarea>
                     </div>
-                    <div>
-                        <button
-                            type="submit"
-                            className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
-                        >
-                            Request
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        className="w-full rounded-md bg-indigo-600 py-3 px-4 font-semibold text-white transition duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                    >
+                        Submit Request
+                    </button>
                 </form>
             </div>
         </div>

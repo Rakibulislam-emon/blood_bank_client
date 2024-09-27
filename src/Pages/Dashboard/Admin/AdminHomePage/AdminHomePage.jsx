@@ -5,7 +5,7 @@ import AdminsHomePage from "../AdminsHomePage/AdminsHomePage";
 const AdminHomePage = () => {
     const { user } = useAuth();
     const [role] = useGetAllUsersRole()
-    console.log('role:', role)
+   
     return (
         <div className=" min-h-screen">
             <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-40 flex flex-col items-center justify-center shadow-lg rounded-lg p-4">

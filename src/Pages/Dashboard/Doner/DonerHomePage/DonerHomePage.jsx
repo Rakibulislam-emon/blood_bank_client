@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import useAuth from "../../../../Hooks/useAuth";
@@ -6,11 +7,11 @@ import { TbEdit } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 // import { CiViewList } from "react-icons/ci";
 import Swal from 'sweetalert2';
-import useRole from "../../../../Hooks/useRole";
+// import useRole from "../../../../Hooks/useRole";
 
 const DonerHomePage = () => {
-    const [status] = useRole();
-    console.log('status:', status);
+    // const [status] = useRole();
+   
 
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
@@ -18,7 +19,7 @@ const DonerHomePage = () => {
         queryKey: ['myDonationRequests'],
         queryFn: async () => {
             const res = await axiosSecure.get(`/myBloodRequests/${user?.email}`);
-            console.log(res.data);
+          
             if (!res.data) {
                 <span className="loading loading-spinner loading-lg"></span>;
             }
@@ -100,12 +101,12 @@ const DonerHomePage = () => {
     }
 
     if (isLoading) {
-        return <span className="loading flex left-0 loading-spinner loading-lg"></span>;
+        return <span className="loading flex h-screen left-0 loading-spinner loading-lg"></span>;
     }
 
     return (
-        <div className="flex  flex-col overflow-x-auto">
-            <div className="sm:-mx-6 lg:-mx-8">
+        <div className="flex flex-col overflow-x-auto">
+            <div className="sm:-mx-6  lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                 <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-40 flex flex-col items-center justify-center shadow-lg rounded-lg p-4">
                 <h3 className="text-4xl text-white font-bold">
@@ -199,9 +200,9 @@ const DonerHomePage = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-center py-4">
+            <div className="border  ">
                 {/* view all button */}
-                <Link to={'my-donation-requests'} className="btn font-bold btn-wide">View All</Link>
+                <Link to={'my-donation-requests'} className="btn border flex  mx-auto font-bold   lg:btn-wide">View All</Link>
             </div>
         </div>
     );

@@ -31,7 +31,7 @@ const SignUp = () => {
             return res.data;
         },
     })
-    console.log(upozilas);
+   
 
     // sort upozilas
     useEffect(() => {
@@ -88,11 +88,12 @@ const SignUp = () => {
             console.log('Profile Updated:', update);
             // Post user info to your server
             if (!userInfo) {
-                return console.log('User not found')
+                return toast.error('User not found')
             } else {
 
+                // eslint-disable-next-line no-unused-vars
                 const res = await axiosSecure.post('/users', userInfo);
-                console.log('Sent to Server:', res.data);
+                
             }
             toast.success('SignUp successful')
             // Navigate to login page after successful registration

@@ -6,9 +6,9 @@ import DonerHomePage from "../../Doner/DonerHomePage/DonerHomePage";
 
 const DashboardHome = () => {
     const [role] = useGetAllUsersRole()
-    console.log('role:', role)
+    
     return (
-        <div className="ml-10 ">
+        <div className=" ">
             {/* <Greetings /> */}
             {/* users homePage */}
             {role === 'donor' && <DonerHomePage />}
